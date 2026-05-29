@@ -14,7 +14,7 @@ const AUDIO_CONFIG = {
 };
 
 // Détection : est-on sur la page de jeu ?
-const EST_PAGE_JEU = window.location.pathname.endsWith('jeu.php');
+const EST_PAGE_JEU = window.location.pathname.endsWith('jeu.html');
 
 const bgMusic = new Audio(AUDIO_CONFIG.musiqueFond);
 bgMusic.loop = true;

@@ -89,8 +89,8 @@
     // Toggle du skin — désactivé pendant une partie
     // ---------------------------------------------------------
     function enPartie() {
-        return window.location.pathname.includes('jeu.php')
-            || window.location.pathname.includes('concepteur.php');
+        return window.location.pathname.includes('jeu.html')
+            || window.location.pathname.includes('concepteur.html');
     }
 
     function toggleSkin() {
