@@ -40,10 +40,10 @@ body {
 .site-header {
     width: 100%;
     background: linear-gradient(180deg, #2a1a0d 0%, #1a0f06 100%);
-    display: flex;
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
     align-items: center;
-    padding: 10px 40px;
+    padding: 8px 40px;
     border-bottom: 4px double var(--gold);
     box-shadow: 0 4px 20px rgba(0,0,0,0.7);
     z-index: 1000;
@@ -54,14 +54,21 @@ body {
     overflow: visible;
 }
 
-.nav-left, .nav-right {
+.nav-left {
     display: flex;
-    gap: 15px;
+    gap: 12px;
     align-items: center;
+    justify-self: start;
+}
+
+.nav-right {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    justify-self: end;
 }
 
 .nav-logo {
-    position: relative;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -69,8 +76,8 @@ body {
 }
 
 .nav-logo img {
-    height: 160px;
-    margin-bottom: -50px;
+    height: 120px;
+    margin-bottom: -35px;
     position: relative;
     z-index: 1001;
     filter: drop-shadow(0 5px 15px rgba(0,0,0,0.8))
@@ -88,11 +95,11 @@ body {
     text-decoration: none;
     color: var(--gold);
     font-family: 'Cinzel', serif;
-    font-size: 14px;
+    font-size: 13px;
     font-weight: bold;
     text-transform: uppercase;
-    letter-spacing: 2px;
-    padding: 10px 22px;
+    letter-spacing: 1.5px;
+    padding: 8px 18px;
     background: linear-gradient(180deg, #4a2c12 0%, #2a1808 100%);
     border: 2px solid var(--gold);
     border-radius: 4px;
@@ -195,20 +202,20 @@ body {
 /* ----- Grille des colonnes ----- */
 .footer-content {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 35px;
-    padding: 45px 60px 25px;
-    max-width: 1400px;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    padding: 25px 50px 10px;
+    max-width: 1200px;
     margin: 0 auto;
 }
 
 /* ----- Titres des colonnes ----- */
 .footer-col h4 {
     font-family: 'Cinzel', serif;
-    font-size: 17px;
+    font-size: 14px;
     color: var(--gold);
-    margin: 0 0 12px 0;
-    padding-bottom: 6px;
+    margin: 0 0 8px 0;
+    padding-bottom: 4px;
     letter-spacing: 1.5px;
     text-transform: uppercase;
     border-bottom: 1px solid rgba(212, 175, 55, 0.4);
@@ -218,13 +225,13 @@ body {
 /* ----- Texte des colonnes ----- */
 .footer-col p,
 .footer-col ul {
-    font-size: 14px;
-    line-height: 1.65;
+    font-size: 13px;
+    line-height: 1.5;
     color: var(--parchment);
 }
 
 .footer-col p {
-    margin: 0 0 10px 0;
+    margin: 0 0 6px 0;
 }
 
 /* ----- Listes ----- */
@@ -235,7 +242,7 @@ body {
 }
 
 .footer-col ul li {
-    margin: 5px 0;
+    margin: 3px 0;
 }
 
 .footer-col ul li a {
@@ -253,10 +260,10 @@ body {
 
 /* ----- Tagline / citation ----- */
 .footer-tagline {
-    margin-top: 12px !important;
+    margin-top: 6px !important;
     color: var(--gold) !important;
     font-style: italic;
-    font-size: 13px !important;
+    font-size: 12px !important;
     opacity: 0.85;
     border-left: 2px solid var(--gold);
     padding-left: 10px;
@@ -276,9 +283,9 @@ body {
 .footer-divider {
     text-align: center;
     color: var(--gold);
-    margin: 10px auto 15px;
+    margin: 6px auto 10px;
     letter-spacing: 14px;
-    font-size: 14px;
+    font-size: 12px;
     opacity: 0.55;
     user-select: none;
 }
@@ -286,9 +293,9 @@ body {
 /* ----- Bas du footer ----- */
 .footer-bottom {
     text-align: center;
-    padding: 18px 15px;
+    padding: 12px 15px;
     background: rgba(0, 0, 0, 0.4);
-    font-size: 12px;
+    font-size: 11px;
     color: #b89c4a;
     border-top: 1px solid rgba(212, 175, 55, 0.4);
     font-family: 'Cinzel', serif;
@@ -296,7 +303,7 @@ body {
 }
 
 .footer-bottom p {
-    margin: 4px 0;
+    margin: 2px 0;
 }
 
 .footer-bottom strong {
@@ -336,8 +343,8 @@ body {
 /* ============ RESPONSIVE ============ */
 @media (max-width: 768px) {
     .footer-content {
-        padding: 35px 25px 15px;
-        gap: 25px;
+        padding: 20px 20px 10px;
+        gap: 18px;
         text-align: center;
     }
 
