@@ -1,12 +1,3 @@
-<?php
-session_start();
-require 'db.php';
-if (!isset($_SESSION['id']) && !isset($_SESSION['invite'])) {
-    header('Location: connexion.php');
-    exit();
-}
-$user_id = $_SESSION['id'] ?? 0;
-?>
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -18,21 +9,32 @@ $user_id = $_SESSION['id'] ?? 0;
     <script src="../js/audio.js" defer></script>
     <script src="../js/skin-secret.js" defer></script>
     <script src="../js/tile-burner-campagne.js" defer></script>
+    <script src="../js/nav-active.js"></script>
 </head>
 <body>
-<?php include 'header.php'; ?>
+<header class="site-header">
+    <nav class="nav-left">
+        <a href="index.html" class="nav-btn">Accueil</a>
+        <a href="profil.html" class="nav-btn">Profil</a>
+        <a href="regles.html" class="nav-btn">Règles du Jeu</a>
+    </nav>
+    <div class="nav-logo">
+        <img src="../images/logo.png" alt="Logo">
+    </div>
+    <nav class="nav-right">
+        <a href="leaderboard.html" class="nav-btn">Leaderboard</a>
+        <a href="menu.html" class="nav-btn">Jeu</a>
+        <a href="settings.html" class="nav-btn">Options</a>
+    </nav>
+</header>
 
 <main class="page-content">
 <div class="concepteur-wrapper">
 
-    <!-- ══════════════════════════════════════
-         PANNEAU GAUCHE : outils + config
-         ══════════════════════════════════════ -->
     <aside class="concepteur-sidebar" id="sidebar-edit">
 
         <h2 class="sidebar-titre">⚒ Concepteur</h2>
 
-        <!-- Dimensions -->
         <section class="sidebar-section">
             <h3 class="sidebar-section-titre">Grille</h3>
             <div class="dim-row">
@@ -46,7 +48,6 @@ $user_id = $_SESSION['id'] ?? 0;
             </div>
         </section>
 
-        <!-- Palette d'outils -->
         <section class="sidebar-section">
             <h3 class="sidebar-section-titre">Palette</h3>
             <div class="palette-grille">
@@ -63,7 +64,6 @@ $user_id = $_SESSION['id'] ?? 0;
             </div>
         </section>
 
-        <!-- Légende rapide -->
         <section class="sidebar-section sidebar-legende">
             <h3 class="sidebar-section-titre">Légende</h3>
             <ul class="legende-liste">
@@ -78,7 +78,6 @@ $user_id = $_SESSION['id'] ?? 0;
             </ul>
         </section>
 
-        <!-- Actions éditeur -->
         <section class="sidebar-section">
             <h3 class="sidebar-section-titre">Actions</h3>
             <div class="actions-col">
@@ -89,18 +88,13 @@ $user_id = $_SESSION['id'] ?? 0;
 
     </aside>
 
-    <!-- ══════════════════════════════════════
-         CENTRE : canvas (éditeur ou jeu)
-         ══════════════════════════════════════ -->
     <div class="concepteur-centre">
 
-        <!-- Mode éditeur -->
         <div id="zone-editeur">
             <div class="canvas-label" id="label-editeur">MODE ÉDITION — Cliquez / Glissez pour placer</div>
             <canvas id="editeur-canvas"></canvas>
         </div>
 
-        <!-- Mode test (jeu intégré) -->
         <div id="zone-jeu" style="display:none">
             <div class="canvas-label" id="label-jeu">MODE TEST — Résolvez votre niveau !</div>
 
@@ -118,14 +112,10 @@ $user_id = $_SESSION['id'] ?? 0;
 
     </div>
 
-    <!-- ══════════════════════════════════════
-         PANNEAU DROIT : résultat + seed
-         ══════════════════════════════════════ -->
     <aside class="concepteur-sidebar sidebar-droite" id="sidebar-result">
 
         <h2 class="sidebar-titre">📜 Résultat</h2>
 
-        <!-- Statut -->
         <section class="sidebar-section">
             <div id="statut-container">
                 <div class="statut-idle" id="statut-idle">
@@ -146,7 +136,6 @@ $user_id = $_SESSION['id'] ?? 0;
             </div>
         </section>
 
-        <!-- Seed (visible après victoire) -->
         <section class="sidebar-section seed-section" id="seed-section" style="display:none">
             <h3 class="sidebar-section-titre">Votre Seed</h3>
             <div class="seed-box">
@@ -154,37 +143,19 @@ $user_id = $_SESSION['id'] ?? 0;
                 <button class="btn-copier" id="btn-copier" title="Copier la seed">📋</button>
             </div>
             <p class="seed-aide">Partagez cette seed avec vos amis !</p>
-
-            <?php if ($user_id > 0): ?>
-            <div class="seed-actions">
-                <input type="text" id="inp-nom-niveau" placeholder="Nom du niveau…" maxlength="60">
-                <button class="tool-btn-action" id="btn-publier">🌐 Publier</button>
-            </div>
-            <div id="msg-publication"></div>
-            <?php else: ?>
-            <p class="seed-aide" style="color:var(--gold)">
-                <a href="connexion.php" style="color:var(--gold)">Connectez-vous</a> pour publier votre niveau.
-            </p>
-            <?php endif; ?>
-
+            <p class="seed-aide" style="color:var(--gold);font-size:0.75rem;">Version hors-ligne — la publication n'est pas disponible.</p>
             <button class="tool-btn-action btn-rejouer" id="btn-rejouer">↺ Recréer un niveau</button>
         </section>
 
     </aside>
 
-</div><!-- .concepteur-wrapper -->
+</div>
 </main>
 
-<?php include 'footer.php'; ?>
-
-<!-- ════════════════════════════════════════════════════
-     SCRIPT PRINCIPAL
-     ════════════════════════════════════════════════════ -->
 <script>
 (function () {
 'use strict';
 
-// ── Constantes ──────────────────────────────────────────────────────────────
 const COULEURS_CASES = {
     eteint:     '#2a1a0d',
     mur:        '#1a1a2e',
@@ -211,14 +182,13 @@ const LABELS_CASES = {
     depart:     '🧍',
 };
 
-// ── État éditeur ─────────────────────────────────────────────────────────────
 let largeur  = 8, hauteur = 8;
-let grille   = [];          // grille[y][x] = string type
+let grille   = [];
 let departX  = 0, departY  = 0;
 let sortieX  = largeur - 1, sortieY = hauteur - 1;
 let outilActif = 'effacer';
 let enTrainDeDessiner = false;
-// ── Images (mêmes assets que le jeu) ────────────────────────────────────────
+
 const ASSETS_SRC = {
     eteint:     "../img/asset/case_eteinte.png",
     mur:        "../img/asset/mur1.png",
@@ -241,7 +211,6 @@ for (const [cle, src] of Object.entries(ASSETS_SRC)) {
 }
 function imgOK(img) { return img && img.complete && img.naturalWidth > 0; }
 
-// ── Éléments DOM ─────────────────────────────────────────────────────────────
 const canvasEdit   = document.getElementById('editeur-canvas');
 const ctxEdit      = canvasEdit.getContext('2d');
 const canvasJeu    = document.getElementById('jeu-canvas');
@@ -258,10 +227,6 @@ const statutVictoire = document.getElementById('statut-victoire');
 
 let partie = null;
 let seedGeneree = null;
-
-// ════════════════════════════════════════
-// ÉDITEUR
-// ════════════════════════════════════════
 
 function tailleCaseEdit() {
     const maxPx = Math.min(window.innerWidth < 900 ? 340 : 560, 560);
@@ -295,31 +260,25 @@ function dessinerEditeur() {
             const px = x * tc, py = y * tc;
             const type = grille[y][x];
 
-            // Fond couleur (toujours, garantit qu'on voit qqch)
             ctxEdit.fillStyle = COULEURS_CASES[type] || COULEURS_CASES.eteint;
             ctxEdit.fillRect(px, py, tc, tc);
 
-            // Image par-dessus si dispo
-            // Pour les cases vides "eteint" on dessine la texture case_eteinte
             const cleImg = (type === 'eteint') ? 'eteint' : type;
             if (imgOK(assets[cleImg])) {
                 ctxEdit.drawImage(assets[cleImg], px, py, tc, tc);
             } else if (LABELS_CASES[type]) {
-                // Fallback emoji si image absente
                 ctxEdit.font = `${Math.floor(tc * 0.5)}px serif`;
                 ctxEdit.textAlign = 'center';
                 ctxEdit.textBaseline = 'middle';
                 ctxEdit.fillText(LABELS_CASES[type], px + tc / 2, py + tc / 2);
             }
 
-            // Grille dorée
             ctxEdit.strokeStyle = 'rgba(212,175,55,0.18)';
             ctxEdit.lineWidth = 1;
             ctxEdit.strokeRect(px + 0.5, py + 0.5, tc - 1, tc - 1);
         }
     }
 
-    // Sortie (si pas dans la grille)
     if (grille[sortieY][sortieX] !== 'sortie') {
         const sx = sortieX * tc, sy = sortieY * tc;
         if (imgOK(assets.sortie)) {
@@ -332,7 +291,6 @@ function dessinerEditeur() {
         }
     }
 
-    // Départ (par-dessus tout)
     const dpx = departX * tc, dpy = departY * tc;
     if (imgOK(assets.depart)) {
         ctxEdit.drawImage(assets.depart, dpx, dpy, tc, tc);
@@ -377,19 +335,16 @@ function appliquerOutil(x, y) {
             grille[y][x] = 'eteint';
             break;
         case 'sortie':
-            // Effacer ancienne sortie
             if (grille[sortieY][sortieX] === 'sortie') grille[sortieY][sortieX] = 'eteint';
             sortieX = x; sortieY = y;
             grille[y][x] = 'sortie';
             break;
         case 'effacer':
             grille[y][x] = 'eteint';
-            if (departX === x && departY === y) { /* garder */ }
+            if (departX === x && departY === y) { }
             break;
         default:
-            // Empêcher de placer sur départ
             if (x === departX && y === departY) return;
-            // Portails : une seule instance
             if (outilActif === 'teleport_a') {
                 for (let r = 0; r < hauteur; r++)
                     for (let c = 0; c < largeur; c++)
@@ -406,7 +361,6 @@ function appliquerOutil(x, y) {
     dessinerEditeur();
 }
 
-// Événements souris / tactile canvas éditeur
 canvasEdit.addEventListener('mousedown',  (e) => { enTrainDeDessiner = true; const c = celluleDepuisEvenement(e); appliquerOutil(c.x, c.y); });
 canvasEdit.addEventListener('mousemove',  (e) => { if (!enTrainDeDessiner) return; const c = celluleDepuisEvenement(e); appliquerOutil(c.x, c.y); });
 canvasEdit.addEventListener('mouseup',    ()  => { enTrainDeDessiner = false; });
@@ -415,7 +369,6 @@ canvasEdit.addEventListener('touchstart', (e) => { e.preventDefault(); enTrainDe
 canvasEdit.addEventListener('touchmove',  (e) => { e.preventDefault(); if (!enTrainDeDessiner) return; const c = celluleDepuisEvenement(e); appliquerOutil(c.x, c.y); }, { passive: false });
 canvasEdit.addEventListener('touchend',   ()  => { enTrainDeDessiner = false; });
 
-// Palette
 document.querySelectorAll('.palette-btn').forEach(btn => {
     btn.addEventListener('click', () => {
         document.querySelectorAll('.palette-btn').forEach(b => b.classList.remove('actif'));
@@ -424,19 +377,13 @@ document.querySelectorAll('.palette-btn').forEach(btn => {
     });
 });
 
-// Dimensions
 document.getElementById('btn-appliquer-dim').addEventListener('click', () => {
     if (confirm('Réinitialiser la grille avec les nouvelles dimensions ?')) resetGrille();
 });
 
-// Reset
 document.getElementById('btn-reset').addEventListener('click', () => {
     if (confirm('Réinitialiser entièrement la grille ?')) resetGrille();
 });
-
-// ════════════════════════════════════════
-// CONSTRUCTION CONFIG → MOTEUR
-// ════════════════════════════════════════
 
 function construireConfig() {
     const cases_speciales = [];
@@ -459,17 +406,11 @@ function construireConfig() {
     };
 }
 
-// ════════════════════════════════════════
-// MODE TEST
-// ════════════════════════════════════════
-
 function validerNiveau() {
-    // Vérifier départ ≠ sortie
     if (departX === sortieX && departY === sortieY) {
         afficherErreur('Le départ et la sortie doivent être sur des cases différentes.');
         return false;
     }
-    // Vérifier que la case de départ n'est pas un mur
     if (grille[departY][departX] === 'mur') {
         afficherErreur('Le départ ne peut pas être sur un mur.');
         return false;
@@ -480,7 +421,6 @@ function validerNiveau() {
 function afficherErreur(msg) {
     msgTest.textContent = msg;
     msgTest.className   = 'erreur';
-    // Flash sur l'éditeur
     canvasEdit.style.boxShadow = '0 0 30px #800000, 0 0 60px #800000';
     setTimeout(() => { canvasEdit.style.boxShadow = ''; }, 800);
 }
@@ -488,7 +428,6 @@ function afficherErreur(msg) {
 document.getElementById('btn-tester').addEventListener('click', () => {
     if (!validerNiveau()) return;
 
-    // Passer en mode jeu
     zoneEditeur.style.display = 'none';
     zoneJeu.style.display     = 'block';
     statutIdle.style.display  = 'none';
@@ -500,7 +439,6 @@ document.getElementById('btn-tester').addEventListener('click', () => {
 
     const config = construireConfig();
 
-    // Dimensionner le canvas de jeu
     const maxPx = Math.min(window.innerWidth < 900 ? 340 : 560, 560);
     canvasJeu.width  = maxPx;
     canvasJeu.height = maxPx;
@@ -520,12 +458,10 @@ document.getElementById('btn-tester').addEventListener('click', () => {
 });
 
 function surVictoire(nbDepl) {
-    // Générer la seed depuis la config
     const config  = construireConfig();
     const encoded = btoa(unescape(encodeURIComponent(JSON.stringify(config))));
     seedGeneree   = encoded;
 
-    // Afficher résultats
     statutTest.style.display     = 'none';
     statutVictoire.style.display = 'block';
     document.getElementById('victoire-depl').textContent = `Résolu en ${nbDepl} déplacement${nbDepl > 1 ? 's' : ''} !`;
@@ -537,7 +473,6 @@ function surVictoire(nbDepl) {
     msgTest.className   = 'victoire';
 }
 
-// Recommencer le test
 document.getElementById('btn-restart-test').addEventListener('click', () => {
     if (partie) partie.reinitialiser();
     msgTest.textContent = '';
@@ -548,7 +483,6 @@ document.getElementById('btn-restart-test').addEventListener('click', () => {
     hudDepl.textContent = '0';
 });
 
-// Retour éditeur
 document.getElementById('btn-retour-edit').addEventListener('click', () => {
     zoneJeu.style.display     = 'none';
     zoneEditeur.style.display = 'block';
@@ -558,9 +492,6 @@ document.getElementById('btn-retour-edit').addEventListener('click', () => {
     dessinerEditeur();
 });
 
-// ════════════════════════════════════════
-// CLAVIER (mode test)
-// ════════════════════════════════════════
 document.addEventListener('keydown', (e) => {
     if (!partie || zoneJeu.style.display === 'none') return;
     const tag = document.activeElement?.tagName;
@@ -574,9 +505,6 @@ document.addEventListener('keydown', (e) => {
     }
 });
 
-// ════════════════════════════════════════
-// COPIER SEED
-// ════════════════════════════════════════
 document.getElementById('btn-copier').addEventListener('click', () => {
     if (!seedGeneree) return;
     navigator.clipboard.writeText(seedGeneree).then(() => {
@@ -586,50 +514,6 @@ document.getElementById('btn-copier').addEventListener('click', () => {
     });
 });
 
-// ════════════════════════════════════════
-// PUBLIER (utilisateur connecté)
-// ════════════════════════════════════════
-<?php if ($user_id > 0): ?>
-document.getElementById('btn-publier')?.addEventListener('click', async () => {
-    if (!seedGeneree) return;
-    const nom = document.getElementById('inp-nom-niveau').value.trim();
-    if (!nom) {
-        document.getElementById('msg-publication').textContent = 'Donnez un nom à votre niveau.';
-        return;
-    }
-    const config = construireConfig();
-    const body = new FormData();
-    body.append('nom',       nom);
-    body.append('seed',      seedGeneree);
-    body.append('largeur',   config.largeur);
-    body.append('hauteur',   config.hauteur);
-    body.append('depart_x',  config.depart_x);
-    body.append('depart_y',  config.depart_y);
-    body.append('sortie_x',  config.sortie_x);
-    body.append('sortie_y',  config.sortie_y);
-    body.append('cases_speciales', JSON.stringify(config.cases_speciales));
-    body.append('type',      'custom');
-
-    try {
-        const res  = await fetch('save_niveau.php', { method: 'POST', body });
-        const data = await res.json();
-        const msg  = document.getElementById('msg-publication');
-        if (data.status === 'ok') {
-            msg.textContent = '✅ Niveau publié avec succès !';
-            msg.className   = 'msg-ok';
-        } else {
-            msg.textContent = '❌ ' + (data.message || 'Erreur inconnue');
-            msg.className   = 'msg-err';
-        }
-    } catch (err) {
-        document.getElementById('msg-publication').textContent = '❌ Erreur réseau.';
-    }
-});
-<?php endif; ?>
-
-// ════════════════════════════════════════
-// REJOUER / RECRÉER
-// ════════════════════════════════════════
 document.getElementById('btn-rejouer').addEventListener('click', () => {
     seedSection.style.display    = 'none';
     statutVictoire.style.display = 'none';
@@ -640,12 +524,71 @@ document.getElementById('btn-rejouer').addEventListener('click', () => {
     resetGrille();
 });
 
-// ════════════════════════════════════════
-// INIT
-// ════════════════════════════════════════
 resetGrille();
 
 })();
 </script>
+
+<footer class="site-footer">
+    <div class="footer-content">
+        <div class="footer-col">
+            <h4>Tile Burner</h4>
+            <p>Embrasez chaque tuile, conquérez le donjon et gravissez les rangs du classement mondial dans cette aventure médiévale-fantastique.</p>
+            <p class="footer-tagline"><em>« Plus vous jouez, plus vous maîtrisez. »</em></p>
+        </div>
+        <div class="footer-col">
+            <h4>Navigation</h4>
+            <ul>
+                <li><a href="index.html">Accueil</a></li>
+                <li><a href="menu.html">Jouer</a></li>
+                <li><a href="profil.html">Profil</a></li>
+                <li><a href="regles.html">Règles du Jeu</a></li>
+                <li><a href="leaderboard.html">Classement</a></li>
+                <li><a href="settings.html">Options</a></li>
+            </ul>
+        </div>
+        <div class="footer-col">
+            <h4>Modes de Jeu</h4>
+            <ul>
+                <li><a href="menu.html">Campagne</a></li>
+                <li><a href="jeu.html?mode=wasm">Niveau Aléatoire</a></li>
+                <li><a href="concepteur.html">Concepteur de Niveaux</a></li>
+            </ul>
+            <h4 style="margin-top:18px;">Aide</h4>
+            <ul>
+                <li><a href="regles.html">Comment jouer ?</a></li>
+                <li><a href="regles.html#conseils">Conseils stratégiques</a></li>
+            </ul>
+        </div>
+        <div class="footer-col footer-col-langue">
+            <h4>Langue</h4>
+            <div id="google_translate_element"></div>
+        </div>
+    </div>
+    <div class="footer-divider">✦ ✦ ✦</div>
+    <div class="footer-bottom">
+        <p>© <span id="footer-year">2025</span> <strong>Tile Burner</strong> — Tous droits réservés.</p>
+        <p class="footer-credits">Projet étudiant développé avec passion</p>
+    </div>
+</footer>
+<style>
+    .goog-te-banner-frame, .goog-te-banner-frame.skiptranslate, iframe.goog-te-banner-frame, .skiptranslate iframe, .skiptranslate > iframe { display: none !important; visibility: hidden !important; height: 0 !important; width: 0 !important; opacity: 0 !important; pointer-events: none !important; }
+    body, body.translated-ltr, body.translated-rtl { top: 0 !important; position: static !important; min-height: 100vh !important; }
+    html { margin-top: 0 !important; }
+    .goog-logo-link, .goog-logo-link:link, .goog-logo-link:visited, .goog-te-gadget img, .goog-te-gadget > span > a, .goog-te-gadget > span { display: none !important; }
+    .goog-te-gadget { color: transparent !important; font-size: 0 !important; height: auto !important; line-height: 0 !important; }
+    .goog-text-highlight { background-color: transparent !important; box-shadow: none !important; background: none !important; }
+    .goog-tooltip, .goog-tooltip:hover { display: none !important; }
+    #google_translate_element { display: inline-flex !important; align-items: center; min-width: 130px; height: auto; line-height: normal !important; }
+    #google_translate_element .goog-te-gadget { display: inline-flex !important; align-items: center; height: auto !important; line-height: normal !important; font-size: 0 !important; }
+    #google_translate_element .goog-te-gadget > div { display: inline-block !important; }
+    .goog-te-combo { background: linear-gradient(180deg, #4a2c12 0%, #2a1808 100%) !important; color: var(--gold) !important; border: 2px solid var(--gold) !important; padding: 8px 30px 8px 14px !important; border-radius: 4px !important; font-family: 'Cinzel', serif !important; font-size: 13px !important; font-weight: bold !important; letter-spacing: 1.5px !important; text-transform: uppercase !important; cursor: pointer; outline: none; min-width: 120px !important; height: auto !important; line-height: 1.4 !important; box-shadow: 0 4px 0 #1a0f06, inset 0 0 10px rgba(0,0,0,0.5); transition: all 0.25s ease; appearance: none; -webkit-appearance: none; -moz-appearance: none; background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'><path fill='%23d4af37' d='M0 0l5 6 5-6z'/></svg>") !important; background-repeat: no-repeat !important; background-position: right 10px center !important; background-size: 10px 6px !important; }
+    .goog-te-combo:hover { background-color: #6b3f1c !important; background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'><path fill='%23ffffff' d='M0 0l5 6 5-6z'/></svg>") !important; color: #fff !important; text-shadow: 0 0 8px var(--gold); box-shadow: 0 4px 0 #1a0f06, 0 0 15px var(--gold), inset 0 0 10px rgba(212,175,55,0.3); transform: translateY(-2px); }
+    .goog-te-combo option { background: #2a1808 !important; color: var(--gold) !important; font-family: 'Cinzel', serif !important; font-weight: bold; padding: 5px !important; }
+    #gt-loading-placeholder { display: inline-flex; align-items: center; min-width: 120px; height: 38px; background: linear-gradient(180deg, #4a2c12 0%, #2a1808 100%); border: 2px solid var(--gold); border-radius: 4px; justify-content: center; color: var(--gold); font-family: 'Cinzel', serif; font-size: 11px; letter-spacing: 1px; opacity: 0.7; animation: gt-pulse 1.2s ease-in-out infinite; }
+    @keyframes gt-pulse { 0%, 100% { opacity: 0.4; } 50% { opacity: 0.9; } }
+</style>
+<script src="../js/translate-widget.js"></script>
+<script>document.getElementById('footer-year').textContent = new Date().getFullYear();</script>
 </body>
 </html>

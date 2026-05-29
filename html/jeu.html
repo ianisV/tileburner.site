@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <script src="https://cdn.jsdelivr.net/npm/php-wasm/php-tags.jsdelivr.mjs" type="module"></script>
+    <meta charset="UTF-8">
+    <title>Tile Burner</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/jeu.css">
+    <link rel="stylesheet" href="../css/common.css">
+    <script src="../js/audio.js" defer></script>
+    <script src="../js/skin-secret.js" defer></script>
+    <script src="../js/nav-active.js"></script>
+</head>
+<body>
+<script>
+const urlParams = new URLSearchParams(window.location.search);
+const MODE = urlParams.get('mode') || 'campagne';
+const NIVEAU_ID = parseInt(urlParams.get('niveau_id')) || 1;
+const SEED_PARAM = urlParams.get('seed');
+const CONFIG_B64 = urlParams.get('config');
+
+const estModeWasm = (MODE === 'wasm');
+var titreNiveau = 'Tile Burner';
+var modeAffiche = MODE.charAt(0).toUpperCase() + MODE.slice(1);
+
+if (estModeWasm) {
+    titreNiveau = 'Mode C natif';
+    modeAffiche = 'WASM (C natif)';
+}
+
+</script>
+
+<header class="site-header">
+    <nav class="nav-left">
+        <a href="index.html" class="nav-btn">Accueil</a>
+        <a href="profil.html" class="nav-btn">Profil</a>
+        <a href="regles.html" class="nav-btn">Règles du Jeu</a>
+    </nav>
+    <div class="nav-logo">
+        <img src="../images/logo.png" alt="Logo">
+    </div>
+    <nav class="nav-right">
+        <a href="leaderboard.html" class="nav-btn">Leaderboard</a>
+        <a href="menu.html" class="nav-btn">Jeu</a>
+        <a href="settings.html" class="nav-btn">Options</a>
+    </nav>
+</header>
+
+<main class="jeu-wrapper">
+<div class="game-container">
+
+    <h2 class="niveau-titre" id="titre-niveau">Tile Burner</h2>
+    <p class="niveau-mode" id="mode-affiche">Mode : Campagne</p>
+
+    <script>
+    document.getElementById('titre-niveau').textContent = titreNiveau;
+    document.getElementById('mode-affiche').textContent = 'Mode : ' + modeAffiche;
+    </script>
+
+    <!-- ════════════════════════════════════════════════════
+         MODE WASM
+         ════════════════════════════════════════════════════ -->
+    <div id="wasm-content" style="display:none">
+
+    <div class="wasm-config">
+        <label>
+            Murs
+            <input type="number" id="wcfg-walls" value="5" min="0" max="40">
+        </label>
+        <button class="btn-wasm" onclick="wNouvellePartie()">🎲 Nouvelle partie</button>
+        <button class="btn-wasm" onclick="wReset()">↺ Recommencer</button>
+        <label>
+            Nom
+            <input type="text" id="wcfg-nom" placeholder="Niveau C natif" maxlength="60"
+                   style="width:160px;padding:4px 6px;background:rgba(0,0,0,0.5);border:1px solid rgba(212,175,55,0.4);border-radius:4px;color:#d4af37;font-family:'Cinzel',serif;font-size:.78rem;">
+        </label>
+        <button class="btn-wasm btn-wasm-green" id="wbtn-publier" onclick="wPublierNiveau()">📤 Publier</button>
+        <a href="menu.html" class="btn-wasm">← Menu</a>
+    </div>
+    <div id="wmsg-pub" style="font-family:'Cinzel',serif;font-size:.78rem;letter-spacing:1px;text-align:center;min-height:1.2rem;margin-top:4px;"></div>
+
+    <div class="hud" style="justify-content:center">
+        <span id="whud-dep">Déplacements : <strong>0</strong></span>
+    </div>
+    <div id="wmsg"></div>
+
+    <div class="wasm-layout">
+        <div class="wasm-left">
+            <div id="wasm-loading">⚙ Chargement du module C…</div>
+            <canvas id="wgame" width="480" height="480" style="display:none"></canvas>
+            <div class="wasm-dpad" id="wasm-dpad" style="display:none">
+                <div></div>
+                <div class="wdp" onclick="wJouer(0)" title="Nord (Z/↑)">↑</div>
+                <div></div>
+                <div class="wdp" onclick="wJouer(3)" title="Ouest (Q/←)">←</div>
+                <div></div>
+                <div class="wdp" onclick="wJouer(1)" title="Est (D/→)">→</div>
+                <div></div>
+                <div class="wdp" onclick="wJouer(2)" title="Sud (S/↓)">↓</div>
+                <div></div>
+            </div>
+        </div>
+
+        <div class="wasm-solver" id="wasm-solver" style="display:none">
+            <h3>⚔ Solveur IDA*</h3>
+            <div id="wsolver-status">En attente…</div>
+            <div class="wsolver-row">
+                <button class="btn-wasm btn-wasm-green" id="wbtn-solve" onclick="wLancerSolveur()" disabled>Résoudre</button>
+                <button class="btn-wasm" id="wbtn-play" onclick="wJouerSolution()" disabled>▶ Animer</button>
+                <button class="btn-wasm" id="wbtn-stop" onclick="wStopAnim()" disabled>⏹</button>
+            </div>
+            <div class="wasm-speed">
+                Vitesse :
+                <input type="range" id="wspeed" min="100" max="1500" value="500" oninput="wAnimSpeed=+this.value;document.getElementById('wspeed-lbl').textContent=this.value+'ms'">
+                <span id="wspeed-lbl">500ms</span>
+            </div>
+            <ul id="wsol-list"></ul>
+        </div>
+    </div>
+
+    <script>
+    var Module = {
+        onRuntimeInitialized: function() {
+            w_init            = Module.cwrap('init',            'number', ['number','number','number','number']);
+            w_jouer           = Module.cwrap('jouer',           'number', ['number']);
+            w_resoudre        = Module.cwrap('resoudre',        'number', []);
+            w_getSolutionCoup = Module.cwrap('getSolutionCoup', 'number', ['number']);
+            w_reset           = Module.cwrap('reset',           null,     []);
+            w_getNbLignes     = Module.cwrap('getNbLignes',     'number', []);
+            w_getNbColonnes   = Module.cwrap('getNbColonnes',   'number', []);
+            w_getJoueurX      = Module.cwrap('getJoueurX',      'number', []);
+            w_getJoueurY      = Module.cwrap('getJoueurY',      'number', []);
+            w_getNbDep        = Module.cwrap('getNbDep',        'number', []);
+            w_getCase         = Module.cwrap('getCase',         'number', ['number','number']);
+            w_estSortie       = Module.cwrap('estSortie',       'number', ['number','number']);
+            w_estGagne        = Module.cwrap('estGagne',        'number', []);
+
+            wasmPret = true;
+            document.getElementById('wasm-loading').style.display = 'none';
+            document.getElementById('wgame').style.display        = '';
+            document.getElementById('wasm-dpad').style.display    = '';
+            document.getElementById('wasm-solver').style.display  = '';
+            document.getElementById('wbtn-solve').disabled        = false;
+            document.getElementById('wsolver-status').textContent = 'Prêt.';
+            wInitImages(wNouvellePartie);
+        },
+        print:    function(t) { console.log('[C]', t); },
+        printErr: function(t) { console.warn('[C]', t); }
+    };
+    </script>
+    <script src="../wasm/jeu.js"></script>
+
+    <script>
+    var wasmPret = false;
+    var w_init, w_jouer, w_resoudre, w_getSolutionCoup, w_reset;
+    var w_getNbLignes, w_getNbColonnes, w_getJoueurX, w_getJoueurY;
+    var w_getNbDep, w_getCase, w_estSortie, w_estGagne;
+
+    var wAnimSolution = [];
+    var wAnimStep     = 0;
+    var wAnimTimer    = null;
+    var wAnimSpeed    = 500;
+
+    var wImages   = {};
+    var wImgPrets = false;
+    var wDerniereDir = 'bas';
+
+    function wInitImages(callback) {
+        var skinActif = window.SkinSecret && window.SkinSecret.estActif();
+        var sfx = skinActif ? '_secret' : '';
+        var liste = {
+            eteinte:      '../img/asset/case_eteinte.png',
+            allumee:      '../img/asset/case_allumee.png',
+            mur1:         '../img/asset/mur1.png',
+            mur2:         '../img/asset/mur2.png',
+            mur3:         '../img/asset/mur3.png',
+            mur4:         '../img/asset/mur4.png',
+            mur5:         '../img/asset/mur5.png',
+            sortie:       '../img/asset/sortie.png',
+            joueur_haut:  '../img/asset/joueur' + sfx + '_haut.png',
+            joueur_bas:   '../img/asset/joueur' + sfx + '_bas.png',
+            joueur_gauche:'../img/asset/joueur' + sfx + '_gauche.png',
+            joueur_droite:'../img/asset/joueur' + sfx + '_droite.png',
+        };
+        wMurVariantes = {};
+
+        var total  = Object.keys(liste).length;
+        var charge = 0;
+        for (var nom in liste) {
+            (function(n, src) {
+                var img = new Image();
+                img.onload = img.onerror = function() {
+                    charge++;
+                    if (charge === total) { wImgPrets = true; if (callback) callback(); }
+                };
+                img.src = src;
+                wImages[n] = img;
+            })(nom, liste[nom]);
+        }
+    }
+
+    var wMurVariantes = {};
+
+    function wRendreGrille() {
+        var rows   = w_getNbLignes();
+        var cols   = w_getNbColonnes();
+        var jx     = w_getJoueurX();
+        var jy     = w_getJoueurY();
+        var canvas = document.getElementById('wgame');
+        var taille = Math.floor(Math.min(480 / rows, 480 / cols));
+        canvas.width  = taille * cols;
+        canvas.height = taille * rows;
+        var ctx = canvas.getContext('2d');
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        for (var i = 0; i < rows; i++) {
+            for (var j = 0; j < cols; j++) {
+                var px     = j * taille;
+                var py     = i * taille;
+                var t      = w_getCase(i, j);
+                var sortie = w_estSortie(i, j);
+
+                wDrawImg(ctx, 'eteinte', px, py, taille, '#1a1208');
+
+                if (sortie) {
+                    wDrawImg(ctx, 'sortie', px, py, taille, '#00aa44');
+                } else if (t === 2) {
+                    var key = i + ',' + j;
+                    if (!wMurVariantes[key]) wMurVariantes[key] = 1 + Math.floor(Math.random() * 5);
+                    wDrawImg(ctx, 'mur' + wMurVariantes[key], px, py, taille, '#3a3a48');
+                } else if (t === 1) {
+                    wDrawImg(ctx, 'allumee', px, py, taille, 'rgba(212,175,55,0.4)');
+                }
+            }
+        }
+
+        var nomSprite = 'joueur_' + wDerniereDir;
+        wDrawImg(ctx, nomSprite, jy * taille, jx * taille, taille, '#d4af37');
+
+        document.querySelector('#whud-dep strong').textContent = w_getNbDep();
+    }
+
+    function wDrawImg(ctx, nom, px, py, taille, fallback) {
+        var img = wImages[nom];
+        if (img && img.complete && img.naturalWidth > 0) {
+            ctx.drawImage(img, px, py, taille, taille);
+        } else if (fallback) {
+            ctx.fillStyle = fallback;
+            ctx.fillRect(px, py, taille, taille);
+        }
+    }
+
+    function wNouvellePartie() {
+        if (!wasmPret) return;
+        wStopAnim();
+        var murs = parseInt(document.getElementById('wcfg-walls').value) || 0;
+        w_init(murs, 0, 0, 0);
+        wAnimSolution = [];
+        document.getElementById('wsol-list').innerHTML = '';
+        document.getElementById('wsolver-status').textContent = 'Prêt.';
+        document.getElementById('wbtn-play').disabled = true;
+        document.getElementById('wmsg').textContent = '';
+        wRendreGrille();
+    }
+
+    function wReset() {
+        if (!wasmPret) return;
+        wStopAnim();
+        w_reset();
+        wAnimSolution = [];
+        document.getElementById('wsol-list').innerHTML = '';
+        document.getElementById('wsolver-status').textContent = 'Prêt.';
+        document.getElementById('wbtn-play').disabled = true;
+        document.getElementById('wmsg').textContent = '';
+        wRendreGrille();
+    }
+
+    function wJouer(dir) {
+        if (!wasmPret) return;
+        if (w_estGagne()) return;
+        wStopAnim();
+        var DIRS_NOM = ['haut', 'droite', 'bas', 'gauche'];
+        wDerniereDir = DIRS_NOM[dir] || 'bas';
+        w_jouer(dir);
+        wRendreGrille();
+        if (w_estGagne()) {
+            document.getElementById('wmsg').textContent = '⚔ Victoire ! ⚔';
+            document.getElementById('wmsg').style.color = '#4ade80';
+        }
+    }
+
+    function wLancerSolveur() {
+        if (!wasmPret) return;
+        wStopAnim();
+        document.getElementById('wsolver-status').textContent = 'Recherche en cours…';
+        document.getElementById('wbtn-solve').disabled = true;
+        setTimeout(function() {
+            w_reset();
+            var nb = w_resoudre();
+            document.getElementById('wbtn-solve').disabled = false;
+            if (nb < 0) {
+                document.getElementById('wsolver-status').textContent = 'Aucune solution.';
+                return;
+            }
+            document.getElementById('wsolver-status').textContent = 'Solution : ' + nb + ' coup' + (nb > 1 ? 's' : '') + '.';
+            wAnimSolution = [];
+            for (var i = 0; i < nb; i++) wAnimSolution.push(w_getSolutionCoup(i));
+
+            var DIRS = ['↑ Nord', '→ Est', '↓ Sud', '← Ouest'];
+            var ul = document.getElementById('wsol-list');
+            ul.innerHTML = '';
+            wAnimSolution.forEach(function(d, i) {
+                var li = document.createElement('li');
+                li.id = 'wstep-' + i;
+                li.innerHTML = '<span style="width:20px;opacity:.5">' + (i+1) + '.</span>' + DIRS[d];
+                ul.appendChild(li);
+            });
+            document.getElementById('wbtn-play').disabled = false;
+        }, 30);
+    }
+
+    function wJouerSolution() {
+        if (!wAnimSolution.length) return;
+        wStopAnim();
+        w_reset();
+        wRendreGrille();
+        wAnimStep = 0;
+        document.getElementById('wbtn-stop').disabled = false;
+        document.getElementById('wbtn-play').disabled = true;
+        wHilite(-1);
+        wAnimTimer = setInterval(function() {
+            if (wAnimStep >= wAnimSolution.length) { wStopAnim(); return; }
+            wHilite(wAnimStep);
+            var DIRS_NOM = ['haut', 'droite', 'bas', 'gauche'];
+            wDerniereDir = DIRS_NOM[wAnimSolution[wAnimStep]] || 'bas';
+            w_jouer(wAnimSolution[wAnimStep]);
+            wRendreGrille();
+            wAnimStep++;
+            if (w_estGagne()) {
+                wStopAnim();
+                document.getElementById('wmsg').textContent = '⚔ Victoire ! ⚔';
+            }
+        }, wAnimSpeed);
+    }
+
+    function wStopAnim() {
+        if (wAnimTimer) { clearInterval(wAnimTimer); wAnimTimer = null; }
+        document.getElementById('wbtn-stop').disabled = true;
+        if (wAnimSolution.length) document.getElementById('wbtn-play').disabled = false;
+    }
+
+    async function wPublierNiveau() {
+        var msgEl = document.getElementById('wmsg-pub');
+        msgEl.style.color = '#c0392b';
+        msgEl.textContent = '❌ Publication non disponible en mode hors-ligne.';
+    }
+
+    function wHilite(idx) {
+        document.querySelectorAll('#wsol-list li').forEach(function(li, i) {
+            li.className = i < idx ? 'done' : i === idx ? 'current' : '';
+        });
+        if (idx >= 0) {
+            var el = document.getElementById('wstep-' + idx);
+            if (el) el.scrollIntoView({ block: 'nearest' });
+        }
+    }
+
+    document.addEventListener('keydown', function(e) {
+        if (!wasmPret) return;
+        var tag = document.activeElement && document.activeElement.tagName;
+        if (tag === 'INPUT' || tag === 'TEXTAREA') return;
+        var map = { ArrowUp:0, z:0, Z:0, ArrowRight:1, d:1, D:1,
+                    ArrowDown:2, s:2, S:2, ArrowLeft:3, q:3, Q:3 };
+        if (map[e.key] !== undefined) { e.preventDefault(); wJouer(map[e.key]); }
+    });
+    </script>
+
+    </div><!-- #wasm-content -->
+
+    <!-- ════════════════════════════════════════════════════
+         MODES CLASSIQUES
+         ════════════════════════════════════════════════════ -->
+    <div id="classic-content">
+
+    <div class="hud">
+        <a href="menu.html" class="btn-back">← Menu</a>
+        <span id="hud-depl">Déplacements : <strong>0</strong></span>
+        <span id="hud-cases">Cases : <strong>0</strong> / <strong>0</strong></span>
+        <button type="button" id="btn-undo">Annuler</button>
+        <button type="button" id="btn-restart">Recommencer</button>
+    </div>
+
+    <canvas id="game" width="600" height="600" aria-label="Grille de jeu"></canvas>
+
+    <div id="message" role="status" aria-live="polite"></div>
+
+    <div class="instructions">
+        <p>Allumez <strong>toutes</strong> les cases puis atteignez la <strong>sortie</strong>.</p>
+        <p>Repasser sur une case allumée l'<strong>éteint</strong>. Déplacement :
+            <kbd>↑</kbd><kbd>↓</kbd><kbd>←</kbd><kbd>→</kbd> ou <kbd>Z</kbd><kbd>Q</kbd><kbd>S</kbd><kbd>D</kbd>
+        </p>
+    </div>
+
+    <div id="popup-victoire" class="popup-overlay" style="display:none">
+        <div class="popup-box">
+            <h2>⚔️ Victoire ! ⚔️</h2>
+            <p class="popup-score">Terminé en <strong id="popup-depl">0</strong> déplacements</p>
+            <div class="popup-actions">
+                <a href="#" id="popup-suivant" class="btn-menu">Niveau suivant →</a>
+                <a href="menu.html" class="btn-menu">← Retour au menu</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    window.PROGRESSION_USER_ID = 'invite';
+    </script>
+    <script src="../js/niveaux-campagne.js"></script>
+    <script src="../js/progression.js"></script>
+    <script src="../js/tile-burner-campagne.js" defer></script>
+
+    <script>
+    (function () {
+        const canvas = document.getElementById('game');
+        const msgEl  = document.getElementById('message');
+        const popup  = document.getElementById('popup-victoire');
+        const popupDepl    = document.getElementById('popup-depl');
+        const popupSuivant = document.getElementById('popup-suivant');
+
+        const NB_NIVEAUX = 20;
+
+        let partie = null;
+        let seedCourante = SEED_PARAM || null;
+
+        if (MODE === 'aleatoire' && !seedCourante) {
+            seedCourante = Date.now();
+        } else if (seedCourante) {
+            seedCourante = parseInt(seedCourante);
+        }
+
+        function genererNiveauAleatoire(seed) {
+            var s = seed || Date.now();
+            var rng = function() {
+                s = (s * 1103515245 + 12345) & 0x7fffffff;
+                return s / 0x7fffffff;
+            };
+            var l = 5 + Math.floor(rng() * 4);
+            var h = 5 + Math.floor(rng() * 4);
+            var cases = [];
+            var nbMurs = Math.floor(rng() * ((l * h) * 0.15));
+            for (var i = 0; i < nbMurs; i++) {
+                cases.push({ x: Math.floor(rng() * l), y: Math.floor(rng() * h), type: 'mur' });
+            }
+            if (rng() > 0.5) {
+                cases.push({ x: Math.floor(rng() * l), y: Math.floor(rng() * h), type: 'glace' });
+            }
+            return {
+                largeur: l, hauteur: h,
+                depart_x: 0, depart_y: 0,
+                sortie_x: l - 1, sortie_y: h - 1,
+                cases_speciales: cases
+            };
+        }
+
+        function obtenirConfig() {
+            if (CONFIG_B64) {
+                try {
+                    return JSON.parse(atob(CONFIG_B64));
+                } catch(e) {}
+            }
+            if (MODE === 'aleatoire') return genererNiveauAleatoire(seedCourante);
+            if (MODE === 'campagne' && window.NIVEAUX_CAMPAGNE) {
+                const n = window.NIVEAUX_CAMPAGNE.find(function(n) { return n.id === NIVEAU_ID; });
+                if (n) return n;
+            }
+            return { largeur: 5, hauteur: 5, depart_x: 0, depart_y: 0, sortie_x: 4, sortie_y: 4, cases_speciales: [] };
+        }
+
+        function sauvegarderProgression(score) {
+            if (typeof Progression !== 'undefined') Progression.terminerNiveau(NIVEAU_ID, score);
+        }
+
+        function afficherPopupVictoire(score) {
+            sauvegarderProgression(score);
+            popupDepl.textContent = score;
+            if (MODE === 'campagne' && NIVEAU_ID < NB_NIVEAUX) {
+                popupSuivant.href = 'jeu.html?mode=campagne&niveau_id=' + (NIVEAU_ID + 1);
+                popupSuivant.style.display = '';
+                popupSuivant.textContent = 'Niveau ' + (NIVEAU_ID + 1) + ' →';
+            } else if (MODE === 'campagne') {
+                popupSuivant.style.display = 'none';
+            } else {
+                popupSuivant.href = 'jeu.html?mode=aleatoire';
+                popupSuivant.textContent = '↻ Nouvelle partie';
+                popupSuivant.style.display = '';
+            }
+            popup.style.display = 'flex';
+        }
+
+        function demarrerPartie() {
+            const config = obtenirConfig();
+            const callbacks = {
+                onDeplacement: function(n) {
+                    const el = document.querySelector('#hud-depl strong');
+                    if (el) el.textContent = n;
+                },
+                onMaj: function(info) {
+                    const el = document.querySelector('#hud-cases');
+                    if (el) el.innerHTML = 'Cases : <strong>' + info.allumees + '</strong> / <strong>' + info.total + '</strong>';
+                },
+                onMessage: function(txt) { if (msgEl) msgEl.textContent = txt; },
+                onVictoire: function(nb) { afficherPopupVictoire(nb); },
+            };
+            if (typeof TileBurnerCampagne !== 'undefined') {
+                partie = new TileBurnerCampagne(canvas, config, callbacks);
+            } else {
+                console.error('Aucun moteur de jeu chargé');
+            }
+        }
+
+        window.addEventListener('load', function() {
+            demarrerPartie();
+            document.getElementById('btn-restart').addEventListener('click', function() {
+                if (partie) partie.recommencer();
+                msgEl.textContent = ''; msgEl.className = '';
+                popup.style.display = 'none';
+            });
+            document.getElementById('btn-undo').addEventListener('click', function() {
+                if (partie) partie.annuler();
+            });
+            document.addEventListener('keydown', function(e) {
+                if (!partie) return;
+                switch (e.key) {
+                    case 'ArrowUp':  case 'z': case 'w': partie.deplacer(-1, 0); e.preventDefault(); break;
+                    case 'ArrowDown': case 's':          partie.deplacer(1, 0);  e.preventDefault(); break;
+                    case 'ArrowLeft': case 'q': case 'a': partie.deplacer(0,-1); e.preventDefault(); break;
+                    case 'ArrowRight': case 'd':          partie.deplacer(0, 1); e.preventDefault(); break;
+                }
+            });
+        });
+    })();
+    </script>
+
+    </div><!-- #classic-content -->
+
+</div>
+</main>
+
+<script>
+if (estModeWasm) {
+    document.getElementById('wasm-content').style.display = '';
+    document.getElementById('classic-content').style.display = 'none';
+}
+</script>
+
+<footer class="site-footer">
+    <div class="footer-content">
+        <div class="footer-col">
+            <h4>Tile Burner</h4>
+            <p>Embrasez chaque tuile, conquérez le donjon et gravissez les rangs du classement mondial dans cette aventure médiévale-fantastique.</p>
+            <p class="footer-tagline"><em>« Plus vous jouez, plus vous maîtrisez. »</em></p>
+        </div>
+        <div class="footer-col">
+            <h4>Navigation</h4>
+            <ul>
+                <li><a href="index.html">Accueil</a></li>
+                <li><a href="menu.html">Jouer</a></li>
+                <li><a href="profil.html">Profil</a></li>
+                <li><a href="regles.html">Règles du Jeu</a></li>
+                <li><a href="leaderboard.html">Classement</a></li>
+                <li><a href="settings.html">Options</a></li>
+            </ul>
+        </div>
+        <div class="footer-col">
+            <h4>Modes de Jeu</h4>
+            <ul>
+                <li><a href="menu.html">Campagne</a></li>
+                <li><a href="jeu.html?mode=wasm">Niveau Aléatoire</a></li>
+                <li><a href="concepteur.html">Concepteur de Niveaux</a></li>
+            </ul>
+            <h4 style="margin-top:18px;">Aide</h4>
+            <ul>
+                <li><a href="regles.html">Comment jouer ?</a></li>
+                <li><a href="regles.html#conseils">Conseils stratégiques</a></li>
+            </ul>
+        </div>
+        <div class="footer-col footer-col-langue">
+            <h4>Langue</h4>
+            <div id="google_translate_element"></div>
+        </div>
+    </div>
+    <div class="footer-divider">✦ ✦ ✦</div>
+    <div class="footer-bottom">
+        <p>© <span id="footer-year">2025</span> <strong>Tile Burner</strong> — Tous droits réservés.</p>
+        <p class="footer-credits">Projet étudiant développé avec passion</p>
+    </div>
+</footer>
+<style>
+    .goog-te-banner-frame, .goog-te-banner-frame.skiptranslate, iframe.goog-te-banner-frame, .skiptranslate iframe, .skiptranslate > iframe { display: none !important; visibility: hidden !important; height: 0 !important; width: 0 !important; opacity: 0 !important; pointer-events: none !important; }
+    body, body.translated-ltr, body.translated-rtl { top: 0 !important; position: static !important; min-height: 100vh !important; }
+    html { margin-top: 0 !important; }
+    .goog-logo-link, .goog-logo-link:link, .goog-logo-link:visited, .goog-te-gadget img, .goog-te-gadget > span > a, .goog-te-gadget > span { display: none !important; }
+    .goog-te-gadget { color: transparent !important; font-size: 0 !important; height: auto !important; line-height: 0 !important; }
+    .goog-text-highlight { background-color: transparent !important; box-shadow: none !important; background: none !important; }
+    .goog-tooltip, .goog-tooltip:hover { display: none !important; }
+    #google_translate_element { display: inline-flex !important; align-items: center; min-width: 130px; height: auto; line-height: normal !important; }
+    #google_translate_element .goog-te-gadget { display: inline-flex !important; align-items: center; height: auto !important; line-height: normal !important; font-size: 0 !important; }
+    #google_translate_element .goog-te-gadget > div { display: inline-block !important; }
+    .goog-te-combo { background: linear-gradient(180deg, #4a2c12 0%, #2a1808 100%) !important; color: var(--gold) !important; border: 2px solid var(--gold) !important; padding: 8px 30px 8px 14px !important; border-radius: 4px !important; font-family: 'Cinzel', serif !important; font-size: 13px !important; font-weight: bold !important; letter-spacing: 1.5px !important; text-transform: uppercase !important; cursor: pointer; outline: none; min-width: 120px !important; height: auto !important; line-height: 1.4 !important; box-shadow: 0 4px 0 #1a0f06, inset 0 0 10px rgba(0,0,0,0.5); transition: all 0.25s ease; appearance: none; -webkit-appearance: none; -moz-appearance: none; background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'><path fill='%23d4af37' d='M0 0l5 6 5-6z'/></svg>") !important; background-repeat: no-repeat !important; background-position: right 10px center !important; background-size: 10px 6px !important; }
+    .goog-te-combo:hover { background-color: #6b3f1c !important; background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'><path fill='%23ffffff' d='M0 0l5 6 5-6z'/></svg>") !important; color: #fff !important; text-shadow: 0 0 8px var(--gold); box-shadow: 0 4px 0 #1a0f06, 0 0 15px var(--gold), inset 0 0 10px rgba(212,175,55,0.3); transform: translateY(-2px); }
+    .goog-te-combo option { background: #2a1808 !important; color: var(--gold) !important; font-family: 'Cinzel', serif !important; font-weight: bold; padding: 5px !important; }
+    #gt-loading-placeholder { display: inline-flex; align-items: center; min-width: 120px; height: 38px; background: linear-gradient(180deg, #4a2c12 0%, #2a1808 100%); border: 2px solid var(--gold); border-radius: 4px; justify-content: center; color: var(--gold); font-family: 'Cinzel', serif; font-size: 11px; letter-spacing: 1px; opacity: 0.7; animation: gt-pulse 1.2s ease-in-out infinite; }
+    @keyframes gt-pulse { 0%, 100% { opacity: 0.4; } 50% { opacity: 0.9; } }
+</style>
+<script src="../js/translate-widget.js"></script>
+<script>document.getElementById('footer-year').textContent = new Date().getFullYear();</script>
+</body>
+</html>
