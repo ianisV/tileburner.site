@@ -65,6 +65,7 @@ const NIVEAU_BDD = <?php echo $niveauBdd ? json_encode($niveauBdd, JSON_UNESCAPE
 <!DOCTYPE html>
 <html lang="fr">
 <head>
+    <script src="https://cdn.jsdelivr.net/npm/php-wasm/php-tags.jsdelivr.mjs" type="module"></script>
     <meta charset="UTF-8">
     <title><?= htmlspecialchars($titreNiveau) ?> — TileBurner</title>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&display=swap" rel="stylesheet">
