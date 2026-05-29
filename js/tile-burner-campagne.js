@@ -424,7 +424,7 @@ class TileBurnerCampagne {
 
     // Si le joueur atterrit directement sur un piège pendant la glissade → reset
     const surPiege = this.grille[ny][nx] === TYPE.PIEGE;
-    const piegeDeclenche = surPiege;
+    const piegeDeclenche = surPiege && (this.compteurPas % this.piegeIntervalle === 0);
 
     if (piegeDeclenche) {
       this._lancerAnimation(
