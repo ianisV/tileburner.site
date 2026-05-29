@@ -81,21 +81,24 @@ function jouerSon(nomSon, callback = null) {
 // REPRISE DE LA MUSIQUE ENTRE LES PAGES
 // ============================================
 function tenterReprise() {
+    // Première visite → on joue par défaut (musicPlaying n'est pas 'false')
+    const doitJouer = localStorage.getItem('musicPlaying') !== 'false';
+    const estMuet   = localStorage.getItem('musicMuted') === 'true';
+
     if (EST_PAGE_JEU) {
-        // Sur la page de jeu : on démarre la musique de jeu depuis le début
-        // (pas de reprise de position, c'est une musique différente)
-        if (localStorage.getItem('musicMuted') !== 'true' &&
-            localStorage.getItem('musicPlaying') === 'true') {
-            gameMusic.play().catch(() => {});
+        if (!estMuet && doitJouer) {
+            gameMusic.play().then(() => {
+                localStorage.setItem('musicPlaying', 'true');
+            }).catch(() => {});
         }
     } else {
-        // Sur les autres pages : musique de menu avec reprise de position
         const savedTime = parseFloat(localStorage.getItem('musicTime') || '0');
         if (savedTime > 0) bgMusic.currentTime = savedTime;
 
-        if (localStorage.getItem('musicMuted') !== 'true' &&
-            localStorage.getItem('musicPlaying') === 'true') {
-            bgMusic.play().catch(() => {});
+        if (!estMuet && doitJouer) {
+            bgMusic.play().then(() => {
+                localStorage.setItem('musicPlaying', 'true');
+            }).catch(() => {});
         }
     }
 }
@@ -107,14 +110,17 @@ document.addEventListener('DOMContentLoaded', () => {
     refreshSettings();
     tenterReprise();
 
-    // Filet de sécurité : si l'autoplay a été bloqué, on relance au premier clic
-    document.addEventListener('click', () => {
+    // Filet de sécurité : si l'autoplay a été bloqué, on relance à la première interaction
+    function demarrerMusique() {
         if (localStorage.getItem('musicMuted') === 'true') return;
         if (musiqueActive.paused) {
             localStorage.setItem('musicPlaying', 'true');
             musiqueActive.play().catch(() => {});
         }
-    }, { once: true });
+    }
+    document.addEventListener('click',     demarrerMusique, { once: true });
+    document.addEventListener('keydown',   demarrerMusique, { once: true });
+    document.addEventListener('touchstart',demarrerMusique, { once: true });
 
     // HOVER
     document.addEventListener('mouseover', (e) => {
