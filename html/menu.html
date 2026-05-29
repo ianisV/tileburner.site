@@ -88,7 +88,7 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     niveaux.forEach((n, index) => {
-        const debloque = index === 0 || window.Progression.estTermine(niveaux[index - 1].id) || window.Progression.estTermine(n.id);
+        const debloque = true;
         const termine  = window.Progression.estTermine(n.id);
         const score    = window.Progression.meilleurScore(n.id);
         const couleur  = couleursDiff[n.difficulte] || '#888';
