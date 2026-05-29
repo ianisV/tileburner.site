@@ -3,62 +3,11 @@
 <head>
     <script src="https://cdn.jsdelivr.net/npm/php-wasm/php-tags.jsdelivr.mjs" type="module"></script>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Tile Burner</title>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../css/jeu.css">
     <link rel="stylesheet" href="../css/common.css">
-    <style>
-    .mobile-dpad {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 4px;
-        margin: 16px auto 8px;
-        user-select: none;
-        -webkit-user-select: none;
-    }
-    .dpad-row {
-        display: flex;
-        gap: 4px;
-        align-items: center;
-        justify-content: center;
-    }
-    .dpad-btn {
-        width: 56px;
-        height: 56px;
-        font-family: 'Cinzel', serif;
-        font-size: 1.3rem;
-        font-weight: bold;
-        background: linear-gradient(180deg, #4a2c12 0%, #2a1808 100%);
-        border: 2px solid rgba(212,175,55,0.5);
-        border-radius: 10px;
-        color: #d4af37;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        transition: all 0.15s;
-        box-shadow: 0 3px 0 #1a0f06, 0 0 8px rgba(212,175,55,0.1);
-        -webkit-tap-highlight-color: transparent;
-        touch-action: manipulation;
-    }
-    .dpad-btn:active {
-        transform: translateY(2px);
-        box-shadow: 0 1px 0 #1a0f06;
-        background: linear-gradient(180deg, #6b3f1c 0%, #3d2410 100%);
-    }
-    .dpad-btn:hover {
-        background: linear-gradient(180deg, #6b3f1c 0%, #3d2410 100%);
-        box-shadow: 0 3px 0 #1a0f06, 0 0 12px rgba(212,175,55,0.3);
-    }
-    .dpad-center {
-        width: 56px;
-        height: 56px;
-    }
-    @media (min-width: 769px) {
-        .mobile-dpad { display: none; }
-    }
-    </style>
     <script src="../js/audio.js" defer></script>
     <script src="../js/skin-secret.js" defer></script>
     <script src="../js/nav-active.js"></script>
@@ -142,13 +91,13 @@ if (estModeWasm) {
             <canvas id="wgame" width="480" height="480" style="display:none"></canvas>
             <div class="wasm-dpad" id="wasm-dpad" style="display:none">
                 <div></div>
-                <div class="wdp" onclick="wJouer(0)" title="Nord (Z/↑)">↑</div>
+                <div class="wdp" data-wdir="0" title="Nord (Z/↑)">↑</div>
                 <div></div>
-                <div class="wdp" onclick="wJouer(3)" title="Ouest (Q/←)">←</div>
+                <div class="wdp" data-wdir="3" title="Ouest (Q/←)">←</div>
                 <div></div>
-                <div class="wdp" onclick="wJouer(1)" title="Est (D/→)">→</div>
+                <div class="wdp" data-wdir="1" title="Est (D/→)">→</div>
                 <div></div>
-                <div class="wdp" onclick="wJouer(2)" title="Sud (S/↓)">↓</div>
+                <div class="wdp" data-wdir="2" title="Sud (S/↓)">↓</div>
                 <div></div>
             </div>
         </div>
@@ -425,6 +374,17 @@ if (estModeWasm) {
                     ArrowDown:2, s:2, S:2, ArrowLeft:3, q:3, Q:3 };
         if (map[e.key] !== undefined) { e.preventDefault(); wJouer(map[e.key]); }
     });
+
+    document.querySelectorAll('#wasm-dpad .wdp').forEach(function(btn) {
+        var dir = parseInt(btn.dataset.wdir);
+        var wmove = function(e) {
+            e.preventDefault();
+            if (!wasmPret) return;
+            wJouer(dir);
+        };
+        btn.addEventListener('click', wmove);
+        btn.addEventListener('touchstart', wmove, { passive: false });
+    });
     </script>
 
     </div><!-- #wasm-content -->
@@ -469,6 +429,7 @@ if (estModeWasm) {
         <p>Allumez <strong>toutes</strong> les cases puis atteignez la <strong>sortie</strong>.</p>
         <p>Repasser sur une case allumée l'<strong>éteint</strong>. Déplacement :
             <kbd>↑</kbd><kbd>↓</kbd><kbd>←</kbd><kbd>→</kbd> ou <kbd>Z</kbd><kbd>Q</kbd><kbd>S</kbd><kbd>D</kbd>
+            <span class="mobile-only">ou utilisez les touches <kbd>⇦</kbd><kbd>⇧</kbd><kbd>⇨</kbd><kbd>⇩</kbd> ci-dessous</span>
         </p>
     </div>
 

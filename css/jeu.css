@@ -159,8 +159,9 @@ html, body {
 /* ============ CANVAS ============ */
 #game {
     display: block;
-    margin: 1.5rem auto;
+    margin: 1rem auto;
     max-width: 100%;
+    width: auto;
     height: auto;
     image-rendering: pixelated;
     border: 1px solid rgba(212,175,55,0.2);
@@ -169,6 +170,22 @@ html, body {
     box-shadow:
         0 0 30px rgba(0,0,0,0.7),
         inset 0 0 30px rgba(0,0,0,0.5);
+    touch-action: manipulation;
+}
+
+#wgame {
+    display: block;
+    margin: 0 auto;
+    max-width: 100%;
+    width: auto;
+    height: auto;
+    image-rendering: pixelated;
+    border: 1px solid rgba(212,175,55,0.2);
+    border-radius: 4px;
+    background: #1a1208;
+    box-shadow:
+        0 0 20px rgba(0,0,0,0.6),
+        inset 0 0 20px rgba(0,0,0,0.4);
     touch-action: manipulation;
 }
 
@@ -312,26 +329,202 @@ html, body {
     transform: translateY(-2px);
 }
 
+/* ============ D-PAD MOBILE (classique) ============ */
+.mobile-dpad {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    margin: 16px auto 8px;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+}
+.dpad-row {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+    justify-content: center;
+}
+.dpad-btn {
+    width: 64px;
+    height: 64px;
+    font-family: 'Cinzel', serif;
+    font-size: 1.5rem;
+    font-weight: bold;
+    background: linear-gradient(180deg, #4a2c12 0%, #2a1808 100%);
+    border: 2px solid rgba(212,175,55,0.5);
+    border-radius: 12px;
+    color: #d4af37;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.12s;
+    box-shadow: 0 4px 0 #1a0f06, 0 0 8px rgba(212,175,55,0.1);
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+}
+.dpad-btn:active {
+    transform: translateY(3px);
+    box-shadow: 0 1px 0 #1a0f06;
+    background: linear-gradient(180deg, #6b3f1c 0%, #3d2410 100%);
+    border-color: #d4af37;
+}
+.dpad-btn:hover {
+    background: linear-gradient(180deg, #6b3f1c 0%, #3d2410 100%);
+    box-shadow: 0 4px 0 #1a0f06, 0 0 14px rgba(212,175,55,0.3);
+}
+.dpad-center {
+    width: 64px;
+    height: 64px;
+}
+
+/* ============ D-PAD WASM ============ */
+.wasm-dpad {
+    display: grid;
+    grid-template-columns: 64px 64px 64px;
+    grid-template-rows: 64px 64px 64px;
+    gap: 6px;
+    justify-content: center;
+    margin: 12px auto;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+}
+.wasm-dpad .wdp {
+    width: 64px;
+    height: 64px;
+    font-family: 'Cinzel', serif;
+    font-size: 1.5rem;
+    font-weight: bold;
+    background: linear-gradient(180deg, #4a2c12 0%, #2a1808 100%);
+    border: 2px solid rgba(212,175,55,0.5);
+    border-radius: 12px;
+    color: #d4af37;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.12s;
+    box-shadow: 0 4px 0 #1a0f06, 0 0 8px rgba(212,175,55,0.1);
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+}
+.wasm-dpad .wdp:active {
+    transform: translateY(3px);
+    box-shadow: 0 1px 0 #1a0f06;
+    background: linear-gradient(180deg, #6b3f1c 0%, #3d2410 100%);
+    border-color: #d4af37;
+}
+.wasm-dpad .wdp:hover {
+    background: linear-gradient(180deg, #6b3f1c 0%, #3d2410 100%);
+    box-shadow: 0 4px 0 #1a0f06, 0 0 14px rgba(212,175,55,0.3);
+}
+
+/* ============ MOBILE-ONLY ============ */
+.mobile-only {
+    display: none;
+}
+@media (pointer: coarse) {
+    .mobile-only {
+        display: inline;
+    }
+}
+
 /* ============ RESPONSIVE ============ */
 @media (max-width: 600px) {
     .game-container {
-        padding: 1rem;
+        padding: 0.8rem;
     }
 
     .hud {
-        font-size: 0.65rem;
-        gap: 0.4rem;
-        padding: 0.5rem;
+        font-size: 0.6rem;
+        gap: 0.3rem;
+        padding: 0.4rem;
+        flex-wrap: wrap;
     }
 
     .hud a,
     .hud button {
-        padding: 0.3rem 0.6rem;
-        font-size: 0.6rem;
+        padding: 0.3rem 0.5rem;
+        font-size: 0.55rem;
+        letter-spacing: 1px;
     }
 
     .niveau-titre {
-        font-size: 1rem;
+        font-size: 0.95rem;
         letter-spacing: 2px;
+    }
+
+    .niveau-mode {
+        font-size: 0.6rem;
+        margin-bottom: 0.8rem;
+    }
+
+    /* Bigger touch buttons on small screens */
+    .mobile-dpad {
+        gap: 8px;
+        margin: 12px auto 4px;
+    }
+    .dpad-row {
+        gap: 8px;
+    }
+    .dpad-btn {
+        width: 72px;
+        height: 72px;
+        font-size: 1.8rem;
+        border-radius: 14px;
+        box-shadow: 0 5px 0 #1a0f06, 0 0 10px rgba(212,175,55,0.15);
+    }
+    .dpad-center {
+        width: 72px;
+        height: 72px;
+    }
+
+    .wasm-dpad {
+        grid-template-columns: 72px 72px 72px;
+        grid-template-rows: 72px 72px 72px;
+        gap: 8px;
+    }
+    .wasm-dpad .wdp {
+        width: 72px;
+        height: 72px;
+        font-size: 1.8rem;
+        border-radius: 14px;
+        box-shadow: 0 5px 0 #1a0f06, 0 0 10px rgba(212,175,55,0.15);
+    }
+
+    .instructions {
+        font-size: 0.65rem;
+    }
+
+    .popup-box {
+        padding: 1.5rem 1.5rem;
+    }
+
+    .popup-box h2 {
+        font-size: 1.2rem;
+    }
+}
+
+@media (max-width: 400px) {
+    .dpad-btn {
+        width: 64px;
+        height: 64px;
+        font-size: 1.5rem;
+    }
+    .dpad-center {
+        width: 64px;
+        height: 64px;
+    }
+    .wasm-dpad {
+        grid-template-columns: 64px 64px 64px;
+        grid-template-rows: 64px 64px 64px;
+    }
+    .wasm-dpad .wdp {
+        width: 64px;
+        height: 64px;
+        font-size: 1.5rem;
     }
 }
