@@ -1,0 +1,558 @@
+/* ============================================================
+   concepteur.css — Page Concepteur Manuel
+   DA : même thème médiéval / Cinzel / or que le reste du site
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@700&display=swap');
+
+/* ── Background identique au menu ──────────────────────────── */
+body {
+    background-color: #0d0905 !important;
+    background-image:
+        radial-gradient(ellipse at 20% 50%, rgba(128,0,0,0.08) 0%, transparent 60%),
+        radial-gradient(ellipse at 80% 20%, rgba(212,175,55,0.05) 0%, transparent 50%),
+        url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23d4af37' fill-opacity='0.02'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+}
+
+/* ── Layout principal ───────────────────────────────────────── */
+.concepteur-wrapper {
+    display: flex;
+    gap: 1.2rem;
+    align-items: flex-start;
+    width: 100%;
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 0.5rem;
+    box-sizing: border-box;
+}
+
+/* ── Colonnes latérales ─────────────────────────────────────── */
+.concepteur-sidebar {
+    width: 220px;
+    min-width: 190px;
+    flex-shrink: 0;
+    background: linear-gradient(180deg, #2a1a0d 0%, #1a0f06 100%);
+    border: 1px solid var(--gold);
+    border-radius: 10px;
+    padding: 1rem 0.9rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.6);
+}
+
+.sidebar-droite {
+    /* légèrement plus étroite */
+    width: 210px;
+}
+
+.sidebar-titre {
+    font-family: 'Cinzel', serif;
+    color: var(--gold);
+    font-size: 1.05rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    text-shadow: 0 0 12px rgba(212,175,55,0.4);
+    border-bottom: 2px solid var(--gold);
+    padding-bottom: 0.6rem;
+    margin: 0 0 0.8rem;
+    text-align: center;
+}
+
+/* ── Sections internes ──────────────────────────────────────── */
+.sidebar-section {
+    margin-bottom: 0.9rem;
+    padding-bottom: 0.9rem;
+    border-bottom: 1px solid rgba(212,175,55,0.15);
+}
+
+.sidebar-section:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+}
+
+.sidebar-section-titre {
+    font-family: 'Cinzel', serif;
+    color: var(--parchment);
+    font-size: 0.7rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin: 0 0 0.55rem;
+    opacity: 0.7;
+}
+
+/* ── Dimensions ─────────────────────────────────────────────── */
+.dim-row {
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+}
+
+.dim-row label {
+    font-family: 'Cinzel', serif;
+    font-size: 0.72rem;
+    color: var(--parchment);
+    letter-spacing: 1px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.dim-row input[type="number"] {
+    width: 54px;
+    background: #16213e;
+    color: var(--parchment);
+    border: 1px solid var(--gold);
+    border-radius: 4px;
+    padding: 0.25rem 0.45rem;
+    font-family: 'Cinzel', serif;
+    font-size: 0.78rem;
+    text-align: center;
+}
+
+/* ── Palette d'outils ───────────────────────────────────────── */
+.palette-grille {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.4rem;
+}
+
+.palette-btn {
+    font-family: 'Cinzel', serif;
+    font-size: 0.67rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--gold);
+    background: linear-gradient(180deg, #3d2b1f 0%, #2a1a0d 100%);
+    border: 1px solid rgba(212,175,55,0.45);
+    border-radius: 5px;
+    padding: 0.4rem 0.3rem;
+    cursor: pointer;
+    transition: all 0.18s ease;
+    box-shadow: 0 2px 0 #1a0f06;
+    text-align: center;
+    line-height: 1.3;
+}
+
+.palette-btn:hover {
+    background: linear-gradient(180deg, #5a3e2b 0%, #3d2b1f 100%);
+    box-shadow: 0 2px 0 #1a0f06, 0 0 8px var(--gold);
+    color: #fff;
+}
+
+.palette-btn.actif {
+    background: linear-gradient(180deg, var(--blood) 0%, #500000 100%);
+    border-color: #fff;
+    color: #fff;
+    box-shadow: 0 2px 0 #2d0000, 0 0 12px var(--blood);
+}
+
+.palette-depart.actif {
+    background: linear-gradient(180deg, #0f766e 0%, #065f52 100%);
+    border-color: #34d399;
+    box-shadow: 0 2px 0 #033d36, 0 0 10px #34d399;
+}
+
+.palette-sortie.actif {
+    background: linear-gradient(180deg, #1a5c2a 0%, #0d3317 100%);
+    border-color: #4ade80;
+    box-shadow: 0 2px 0 #0a2010, 0 0 10px #4ade80;
+}
+
+/* ── Légende ─────────────────────────────────────────────────── */
+.legende-liste {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+}
+
+.legende-liste li {
+    font-family: 'Cinzel', serif;
+    font-size: 0.65rem;
+    color: var(--parchment);
+    letter-spacing: 0.5px;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    opacity: 0.85;
+}
+
+.leg-puce {
+    width: 14px;
+    height: 14px;
+    border-radius: 2px;
+    border: 1px solid rgba(212,175,55,0.3);
+    flex-shrink: 0;
+    display: inline-block;
+}
+
+.leg-case      { background: #2a1a0d; border-color: rgba(212,175,55,0.5); }
+.leg-mur       { background: #1a1a2e; }
+.leg-glace     { background: #a8d8ea; }
+.leg-fragile   { background: #d4a84b; }
+.leg-piege     { background: #8b0000; }
+.leg-teleport-a { background: #1e40af; }
+.leg-teleport-b { background: #7c3aed; }
+.leg-maudite   { background: #4a0080; }
+
+/* ── Boutons d'action ────────────────────────────────────────── */
+.actions-col {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.tool-btn-action {
+    font-family: 'Cinzel', serif;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--gold);
+    background: linear-gradient(180deg, var(--blood) 0%, #500000 100%);
+    border: 1px solid var(--gold);
+    border-radius: 5px;
+    padding: 0.45rem 0.8rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 3px 0 #2d0000;
+    width: 100%;
+    text-align: center;
+}
+
+.tool-btn-action:hover {
+    background: linear-gradient(180deg, #a00000 0%, #700000 100%);
+    box-shadow: 0 3px 0 #2d0000, 0 0 12px var(--gold);
+    transform: translateY(-2px);
+    color: #fff;
+}
+
+.tool-btn-action:active {
+    transform: translateY(1px);
+    box-shadow: 0 1px 0 #2d0000;
+}
+
+.btn-tester {
+    background: linear-gradient(180deg, #1e5c2a 0%, #0d3317 100%);
+    border-color: #4ade80;
+    color: #4ade80;
+    box-shadow: 0 3px 0 #0a2010;
+}
+
+.btn-tester:hover {
+    background: linear-gradient(180deg, #25803b 0%, #154522 100%);
+    box-shadow: 0 3px 0 #0a2010, 0 0 14px #4ade80;
+    color: #fff;
+}
+
+.btn-reset {
+    background: linear-gradient(180deg, #3d2b1f 0%, #2a1a0d 100%);
+    border-color: rgba(212,175,55,0.4);
+    color: rgba(212,175,55,0.7);
+}
+
+.btn-reset:hover {
+    background: linear-gradient(180deg, #5a3e2b 0%, #3d2b1f 100%);
+    color: var(--gold);
+}
+
+/* ── Zone centrale ───────────────────────────────────────────── */
+.concepteur-centre {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.6rem;
+    min-width: 0;
+}
+
+.canvas-label {
+    font-family: 'Cinzel', serif;
+    font-size: 0.72rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: rgba(212,175,55,0.6);
+    text-align: center;
+    padding: 0.3rem 0;
+}
+
+/* Canvas éditeur */
+#editeur-canvas {
+    border: 3px solid var(--gold);
+    border-radius: 8px;
+    cursor: crosshair;
+    max-width: 100%;
+    display: block;
+    box-shadow:
+        0 0 25px rgba(212,175,55,0.2),
+        0 0 50px rgba(0,0,0,0.7);
+    transition: box-shadow 0.3s ease;
+    touch-action: none;
+}
+
+#editeur-canvas:hover {
+    box-shadow:
+        0 0 35px rgba(212,175,55,0.35),
+        0 0 60px rgba(0,0,0,0.7);
+}
+
+/* Canvas jeu */
+#jeu-canvas {
+    border: 3px solid var(--gold);
+    border-radius: 8px;
+    max-width: 100%;
+    display: block;
+    box-shadow:
+        0 0 25px rgba(212,175,55,0.2),
+        0 0 50px rgba(0,0,0,0.7);
+}
+
+/* ── HUD test ────────────────────────────────────────────────── */
+.hud-test {
+    display: flex;
+    gap: 0.8rem;
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: center;
+    font-family: 'Cinzel', serif;
+    font-size: 0.75rem;
+    color: var(--parchment);
+    letter-spacing: 1px;
+    background: rgba(0,0,0,0.35);
+    border: 1px solid rgba(212,175,55,0.2);
+    border-radius: 6px;
+    padding: 0.4rem 0.8rem;
+    width: 100%;
+    max-width: 560px;
+    box-sizing: border-box;
+}
+
+.tool-btn-small {
+    font-family: 'Cinzel', serif;
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--gold);
+    background: linear-gradient(180deg, #3d2b1f 0%, #2a1a0d 100%);
+    border: 1px solid rgba(212,175,55,0.4);
+    border-radius: 4px;
+    padding: 0.28rem 0.6rem;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    box-shadow: 0 2px 0 #1a0f06;
+}
+
+.tool-btn-small:hover {
+    background: linear-gradient(180deg, #5a3e2b 0%, #3d2b1f 100%);
+    box-shadow: 0 2px 0 #1a0f06, 0 0 8px var(--gold);
+    color: #fff;
+}
+
+/* ── Message test ────────────────────────────────────────────── */
+#test-message {
+    font-family: 'Cinzel', serif;
+    font-size: 0.9rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #4ade80;
+    text-shadow: 0 0 10px rgba(74,222,128,0.5);
+    min-height: 1.4rem;
+    text-align: center;
+}
+
+#test-message.erreur {
+    color: var(--blood);
+    text-shadow: 0 0 10px var(--blood);
+}
+
+#test-message.victoire {
+    color: var(--gold);
+    text-shadow: 0 0 12px var(--gold);
+    font-size: 1rem;
+}
+
+/* ── Panneau droite : statuts ────────────────────────────────── */
+.statut-idle,
+.statut-test,
+.statut-victoire {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    text-align: center;
+    padding: 0.5rem 0;
+}
+
+.statut-icone {
+    font-size: 2rem;
+    line-height: 1;
+}
+
+.statut-idle p,
+.statut-test p,
+.statut-victoire p {
+    font-family: 'Cinzel', serif;
+    font-size: 0.72rem;
+    color: var(--parchment);
+    letter-spacing: 1px;
+    margin: 0;
+    line-height: 1.5;
+}
+
+.statut-sub {
+    opacity: 0.6;
+    font-size: 0.65rem !important;
+}
+
+.victoire-titre {
+    color: var(--gold) !important;
+    font-size: 0.85rem !important;
+    text-shadow: 0 0 10px rgba(212,175,55,0.5);
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50%       { transform: scale(1.15); opacity: 0.75; }
+}
+
+.anim-pulse {
+    animation: pulse 1.4s ease-in-out infinite;
+    display: inline-block;
+}
+
+/* ── Seed ────────────────────────────────────────────────────── */
+.seed-section {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.seed-box {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: rgba(0,0,0,0.4);
+    border: 1px solid var(--gold);
+    border-radius: 6px;
+    padding: 0.4rem 0.55rem;
+}
+
+.seed-box code {
+    font-family: monospace;
+    font-size: 0.68rem;
+    color: #4ade80;
+    flex: 1;
+    word-break: break-all;
+    line-height: 1.4;
+}
+
+.btn-copier {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+    padding: 0;
+    flex-shrink: 0;
+    transition: transform 0.15s;
+}
+
+.btn-copier:hover { transform: scale(1.2); }
+
+.seed-aide {
+    font-family: 'Cinzel', serif;
+    font-size: 0.63rem;
+    color: var(--parchment);
+    opacity: 0.6;
+    letter-spacing: 1px;
+    text-align: center;
+    margin: 0;
+}
+
+.seed-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+
+.seed-actions input[type="text"] {
+    background: #16213e;
+    color: var(--parchment);
+    border: 1px solid var(--gold);
+    border-radius: 5px;
+    padding: 0.35rem 0.6rem;
+    font-family: 'Cinzel', serif;
+    font-size: 0.72rem;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.seed-actions input[type="text"]::placeholder {
+    color: rgba(244,228,188,0.3);
+}
+
+#msg-publication {
+    font-family: 'Cinzel', serif;
+    font-size: 0.7rem;
+    letter-spacing: 1px;
+    min-height: 1rem;
+    text-align: center;
+}
+
+#msg-publication.msg-ok  { color: #4ade80; }
+#msg-publication.msg-err { color: var(--blood); }
+
+.btn-rejouer {
+    background: linear-gradient(180deg, #3d2b1f 0%, #2a1a0d 100%);
+    border-color: rgba(212,175,55,0.4);
+    color: rgba(212,175,55,0.8);
+    font-size: 0.68rem;
+    margin-top: 0.2rem;
+}
+
+.btn-rejouer:hover {
+    background: linear-gradient(180deg, #5a3e2b 0%, #3d2b1f 100%);
+    color: var(--gold);
+    box-shadow: 0 3px 0 #2d0000, 0 0 10px var(--gold);
+}
+
+/* ── Responsive ──────────────────────────────────────────────── */
+@media (max-width: 960px) {
+    .concepteur-wrapper {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .concepteur-sidebar,
+    .sidebar-droite {
+        width: 100%;
+        max-width: 560px;
+    }
+
+    .sidebar-legende {
+        display: none; /* masquer sur mobile pour économiser l'espace */
+    }
+
+    .palette-grille {
+        grid-template-columns: repeat(5, 1fr);
+    }
+
+    .dim-row {
+        flex-direction: row;
+        align-items: center;
+        flex-wrap: wrap;
+    }
+
+    .dim-row label {
+        flex-direction: row;
+        align-items: center;
+    }
+}
+
+@media (max-width: 600px) {
+    .palette-grille {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}

@@ -1,0 +1,379 @@
+/* ============ VARIABLES ============ */
+:root {
+    --gold: #d4af37;
+    --blood: #800000;
+    --parchment: #f4e4bc;
+    --dark-wood: #3d2b1f;
+}
+
+/* ============ LAYOUT GLOBAL (PRIORITAIRE) ============ */
+html {
+    margin: 0 !important;
+    padding: 0 !important;
+    height: auto !important;
+    min-height: 100% !important;
+}
+
+body {
+    margin: 0 !important;
+    padding: 0 !important;
+    min-height: 100vh !important;
+    height: auto !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    justify-content: flex-start !important;
+}
+
+/* Le contenu principal prend l'espace restant et centre la box */
+.page-content {
+    flex: 1 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* ============ HEADER ============ */
+.site-header {
+    width: 100%;
+    background: linear-gradient(180deg, #2a1a0d 0%, #1a0f06 100%);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 40px;
+    border-bottom: 4px double var(--gold);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.7);
+    z-index: 1000;
+    font-family: 'Cinzel', serif;
+    box-sizing: border-box;
+    flex-shrink: 0;
+    position: relative;
+    overflow: visible;
+}
+
+.nav-left, .nav-right {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+.nav-logo {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.nav-logo img {
+    height: 160px;
+    margin-bottom: -50px;
+    position: relative;
+    z-index: 1001;
+    filter: drop-shadow(0 5px 15px rgba(0,0,0,0.8))
+            drop-shadow(0 0 15px var(--gold));
+    transition: transform 0.3s ease;
+}
+
+.nav-logo img:hover {
+    transform: scale(1.05);
+}
+
+/* ============ BOUTONS DE NAVIGATION ============ */
+.nav-btn {
+    display: inline-block;
+    text-decoration: none;
+    color: var(--gold);
+    font-family: 'Cinzel', serif;
+    font-size: 14px;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    padding: 10px 22px;
+    background: linear-gradient(180deg, #4a2c12 0%, #2a1808 100%);
+    border: 2px solid var(--gold);
+    border-radius: 4px;
+    box-shadow:
+        0 4px 0 #1a0f06,
+        inset 0 0 10px rgba(0,0,0,0.5);
+    transition: all 0.25s ease;
+}
+
+.nav-btn:hover {
+    background: linear-gradient(180deg, #6b3f1c 0%, #3d2410 100%);
+    color: #fff;
+    text-shadow: 0 0 8px var(--gold);
+    box-shadow:
+        0 4px 0 #1a0f06,
+        0 0 15px var(--gold),
+        inset 0 0 10px rgba(212, 175, 55, 0.3);
+    transform: translateY(-2px);
+}
+
+.nav-btn.active {
+    background: linear-gradient(180deg, var(--blood) 0%, #500000 100%);
+    color: var(--gold);
+    box-shadow:
+        0 4px 0 #1a0f06,
+        0 0 15px var(--blood),
+        inset 0 0 10px rgba(0,0,0,0.5);
+}
+
+/* ============ BOUTONS GÉNÉRIQUES ============ */
+.btn-medieval {
+    display: inline-block;
+    text-decoration: none;
+    text-align: center;
+    color: var(--gold);
+    font-family: 'Cinzel', serif;
+    font-size: 18px;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    padding: 15px 35px;
+    margin: 10px;
+    background: linear-gradient(180deg, var(--blood) 0%, #500000 100%);
+    border: 2px solid var(--gold);
+    border-radius: 5px;
+    cursor: pointer;
+    box-shadow:
+        0 5px 0 #2d0000,
+        inset 0 0 15px rgba(0,0,0,0.4);
+    transition: all 0.25s ease;
+}
+
+.btn-medieval:hover {
+    background: linear-gradient(180deg, #a00000 0%, #700000 100%);
+    color: #fff;
+    text-shadow: 0 0 10px var(--gold);
+    box-shadow:
+        0 5px 0 #2d0000,
+        0 0 25px var(--gold),
+        inset 0 0 15px rgba(212, 175, 55, 0.4);
+    transform: translateY(-3px) scale(1.05);
+}
+
+.btn-medieval:active {
+    transform: translateY(2px) scale(1.02);
+    box-shadow:
+        0 2px 0 #2d0000,
+        inset 0 0 15px rgba(0,0,0,0.6);
+}
+
+/* ============================================================
+   ============ FOOTER (VERSION ENRICHIE) =====================
+============================================================ */
+.site-footer {
+    width: 100%;
+    background: linear-gradient(180deg, #2a1a0d 0%, #1a0f06 100%);
+    color: var(--parchment);
+    border-top: 4px double var(--gold);
+    font-family: 'MedievalSharp', cursive;
+    flex-shrink: 0;
+    box-shadow: 0 -4px 20px rgba(0,0,0,0.6);
+    position: relative;
+}
+
+/* Léger effet de texture en haut du footer */
+.site-footer::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 6px;
+    background: linear-gradient(90deg,
+        transparent 0%,
+        rgba(212,175,55,0.5) 50%,
+        transparent 100%);
+    pointer-events: none;
+}
+
+/* ----- Grille des colonnes ----- */
+.footer-content {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 35px;
+    padding: 45px 60px 25px;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+/* ----- Titres des colonnes ----- */
+.footer-col h4 {
+    font-family: 'Cinzel', serif;
+    font-size: 17px;
+    color: var(--gold);
+    margin: 0 0 12px 0;
+    padding-bottom: 6px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    border-bottom: 1px solid rgba(212, 175, 55, 0.4);
+    text-shadow: 0 0 8px rgba(212, 175, 55, 0.3);
+}
+
+/* ----- Texte des colonnes ----- */
+.footer-col p,
+.footer-col ul {
+    font-size: 14px;
+    line-height: 1.65;
+    color: var(--parchment);
+}
+
+.footer-col p {
+    margin: 0 0 10px 0;
+}
+
+/* ----- Listes ----- */
+.footer-col ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.footer-col ul li {
+    margin: 5px 0;
+}
+
+.footer-col ul li a {
+    color: var(--parchment);
+    text-decoration: none;
+    transition: all 0.25s ease;
+    display: inline-block;
+}
+
+.footer-col ul li a:hover {
+    color: var(--gold);
+    text-shadow: 0 0 8px rgba(212, 175, 55, 0.6);
+    transform: translateX(4px);
+}
+
+/* ----- Tagline / citation ----- */
+.footer-tagline {
+    margin-top: 12px !important;
+    color: var(--gold) !important;
+    font-style: italic;
+    font-size: 13px !important;
+    opacity: 0.85;
+    border-left: 2px solid var(--gold);
+    padding-left: 10px;
+}
+
+/* ----- Réseaux sociaux ----- */
+.footer-socials li a {
+    display: inline-block;
+    padding: 3px 0;
+}
+
+.footer-socials li a:hover {
+    transform: translateX(4px) scale(1.05);
+}
+
+/* ----- Séparateur décoratif ----- */
+.footer-divider {
+    text-align: center;
+    color: var(--gold);
+    margin: 10px auto 15px;
+    letter-spacing: 14px;
+    font-size: 14px;
+    opacity: 0.55;
+    user-select: none;
+}
+
+/* ----- Bas du footer ----- */
+.footer-bottom {
+    text-align: center;
+    padding: 18px 15px;
+    background: rgba(0, 0, 0, 0.4);
+    font-size: 12px;
+    color: #b89c4a;
+    border-top: 1px solid rgba(212, 175, 55, 0.4);
+    font-family: 'Cinzel', serif;
+    letter-spacing: 1px;
+}
+
+.footer-bottom p {
+    margin: 4px 0;
+}
+
+.footer-bottom strong {
+    color: var(--gold);
+    letter-spacing: 2px;
+}
+
+.footer-bottom a {
+    color: var(--gold);
+    text-decoration: none;
+    margin: 0 5px;
+    transition: all 0.25s ease;
+}
+
+.footer-bottom a:hover {
+    color: #fff;
+    text-shadow: 0 0 8px var(--gold);
+}
+
+.footer-credits {
+    margin-top: 6px !important;
+    opacity: 0.9;
+}
+
+/* ============ FOOTER — COLONNE LANGUE ============ */
+.footer-col-langue {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.footer-col-langue #google_translate_element {
+    margin-top: 4px;
+    margin-bottom: 10px;
+}
+
+/* ============ RESPONSIVE ============ */
+@media (max-width: 768px) {
+    .footer-content {
+        padding: 35px 25px 15px;
+        gap: 25px;
+        text-align: center;
+    }
+
+    .footer-col h4 {
+        border-bottom: none;
+        text-align: center;
+    }
+
+    .footer-col-langue {
+        align-items: center;
+    }
+
+    .footer-tagline {
+        border-left: none;
+        border-top: 1px solid var(--gold);
+        padding-left: 0;
+        padding-top: 8px;
+    }
+
+    .footer-col ul li a:hover {
+        transform: none;
+    }
+
+    .footer-divider {
+        letter-spacing: 8px;
+    }
+}
+
+@media (max-width: 480px) {
+    .footer-bottom {
+        font-size: 11px;
+        padding: 14px 10px;
+    }
+
+    .footer-bottom a {
+        display: inline-block;
+        margin: 3px 5px;
+    }
+}

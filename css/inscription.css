@@ -1,0 +1,161 @@
+:root {
+    --gold: #d4af37;
+    --blood: #800000;
+    --parchment: #f4e4bc;
+}
+
+/* PAGE */
+body {
+    background: radial-gradient(circle, #800000 0%, #333028 100%);
+    font-family: 'MedievalSharp', cursive;
+    color: #3d2b1f;
+}
+
+
+/* BOITE */
+.box {
+
+    background: var(--parchment);
+
+    padding: 40px;
+
+    border: 10px double #5d4037;
+
+    border-radius: 5px;
+
+    box-shadow:
+        0 0 50px rgba(0,0,0,0.8),
+        inset 0 0 100px rgba(139,69,19,0.2);
+
+    width: 350px;
+
+    text-align: center;
+}
+
+/* TITRE */
+h2 {
+
+    font-family: 'Cinzel', serif;
+
+    color: var(--blood);
+
+    text-transform: uppercase;
+
+    letter-spacing: 2px;
+
+    margin-bottom: 30px;
+}
+
+/* INPUTS */
+input {
+
+    width: 100%;
+
+    padding: 12px;
+
+    margin: 15px 0;
+
+    background: rgba(255,255,255,0.5);
+
+    border: 2px solid #8b4513;
+
+    border-radius: 3px;
+
+    box-sizing: border-box;
+
+    font-family: 'MedievalSharp';
+
+    font-size: 16px;
+
+    color: #2c1e11;
+}
+
+/* FOCUS INPUT */
+input:focus {
+
+    outline: none;
+
+    background: #fff;
+
+    border-color: var(--gold);
+
+    box-shadow: 0 0 10px var(--gold);
+}
+
+/* BOUTON */
+button {
+
+    width: 100%;
+
+    padding: 15px;
+
+    background: var(--blood);
+
+    color: var(--gold);
+
+    border: 2px solid var(--gold);
+
+    border-radius: 5px;
+
+    cursor: pointer;
+
+    font-size: 18px;
+
+    font-weight: bold;
+
+    font-family: 'Cinzel';
+
+    text-transform: uppercase;
+
+    transition: 0.3s;
+
+    margin-top: 10px;
+
+    box-shadow: 0 4px 0 #500000;
+}
+
+/* HOVER BOUTON */
+button:hover {
+
+    background: #a00000;
+
+    transform: translateY(-2px);
+}
+
+/* MESSAGE ERREUR */
+.error {
+
+    color: white;
+
+    background: var(--blood);
+
+    padding: 10px;
+
+    border-radius: 5px;
+
+    margin-bottom: 20px;
+
+    border: 1px solid var(--gold);
+}
+
+/* LIEN */
+.link {
+
+    display: block;
+
+    margin-top: 20px;
+
+    color: #8b4513;
+
+    text-decoration: none;
+
+    font-weight: bold;
+}
+
+/* HOVER LIEN */
+.link:hover {
+
+    color: var(--blood);
+
+    text-decoration: underline;
+}

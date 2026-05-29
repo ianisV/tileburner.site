@@ -1,0 +1,164 @@
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=MedievalSharp&display=swap');
+
+:root {
+    --gold: #d4af37;
+    --blood: #800000;
+    --stone: #2c3e50;
+    --parchment: #f4e4bc;
+}
+
+body {
+    background: #0d0905 !important;
+    background-image:
+        radial-gradient(circle, #800000 0%, #333028 100%) !important;
+    font-family: 'MedievalSharp', cursive;
+    color: #3d2b1f;
+    margin: 0 auto;
+    padding: 120px 20px 40px 20px; 
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    box-sizing: border-box;
+
+}
+
+h1 {
+    font-family: 'Cinzel', serif;
+    text-align: center;
+    color: var(--gold);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 10px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+}
+
+p {
+    text-align: center;
+    color: var(--parchment);
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.9);
+}
+
+/* Bouton Retour au menu */
+.btn-retour {
+    display: inline-block;
+    margin-bottom: 20px;
+    color: var(--parchment);
+    background: #b2b3b2;
+    text-decoration: none;
+    border: 2px solid #8b4513;
+    padding: 8px 15px;
+    border-radius: 4px;
+    font-family: 'MedievalSharp', cursive;
+    transition: 0.3s;
+}
+
+.btn-retour:hover {
+    border-color: var(--gold);
+    color: var(--gold);
+    background: var(--blood);
+    box-shadow: 0 0 10px var(--gold);
+}
+
+/* Tableau façon Grimoire*/
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--parchment);
+    border: 6px double #5d4037;
+    border-radius: 5px;
+    overflow: hidden;
+    box-shadow: 
+        0 0 50px rgba(0,0,0,0.8), 
+        inset 0 0 100px rgba(139,69,19,0.15);
+}
+
+th, td {
+    padding: 14px 15px;
+    text-align: left;
+    border-bottom: 1px solid rgba(139, 69, 19, 0.3);
+}
+
+th {
+    font-family: 'Cinzel', serif;
+    background-color: var(--blood);
+    color: var(--gold);
+    border-bottom: 3px solid var(--gold);
+    text-transform: uppercase;
+    font-size: 15px;
+    letter-spacing: 1px;
+}
+
+tr:hover {
+    background-color: rgba(139, 69, 19, 0.08);
+}
+
+tr:last-child td {
+    border-bottom: none;
+}
+
+td strong {
+    color: var(--blood);
+}
+
+.badge {
+    padding: 4px 8px;
+    border-radius: 3px;
+    font-size: 13px;
+    font-weight: bold;
+    color: white;
+    border: 1px solid #4ade80;
+}
+
+.badge-campagne { 
+    background-color: var(--stone); 
+    border-color: #1a252f;
+}
+
+.badge-aleatoire { 
+    background-color: #892d2d; 
+}
+
+.badge-custom { 
+    background-color: #d35400; 
+}
+
+.btn-jouer {
+    display: inline-block;
+    padding: 8px 16px;
+    background: var(--blood);
+    color: var(--gold);
+    border: 2px solid var(--gold);
+    border-radius: 4px;
+    cursor: pointer;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: bold;
+    font-family: 'Cinzel', serif;
+    text-transform: uppercase;
+    transition: 0.2s;
+    box-shadow: 0 3px 0 #500000;
+}
+
+.btn-jouer:hover {
+    background: #a00000;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 0 #500000;
+}
+
+.btn-jouer:active {
+    transform: translateY(1px);
+    box-shadow: 0 1px 0 #500000;
+}
+/* Seed : tronquée, invisible sauf au survol (title) */
+td.td-seed {
+    font-family: monospace;
+    font-size: 1px;
+    color: transparent;
+    max-width: 160px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    cursor: help;
+}

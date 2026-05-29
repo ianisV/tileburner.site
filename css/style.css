@@ -1,0 +1,94 @@
+:root {
+    --gold: #d4af37;
+    --blood: #800000;
+    --stone: #2c3e50;
+    --parchment: #f4e4bc;
+}
+
+body {
+    background: radial-gradient(circle, #800000 0%, #333028 100%);
+    font-family: 'MedievalSharp', cursive;
+    color: #3d2b1f;
+}
+
+
+/* BOITE  CONNEXION */
+.box {
+
+    background: var(--parchment);
+
+    padding: 40px;
+
+    border: 10px double #5d4037;
+
+    border-radius: 5px;
+
+    box-shadow:
+        0 0 50px rgba(0,0,0,0.8),
+        inset 0 0 100px rgba(139,69,19,0.2);
+
+    width: 350px;
+
+    text-align: center;
+
+}
+
+/*  TITRE */
+h2 {
+
+    font-family: 'Cinzel', serif;
+
+    color: var(--blood);
+
+    text-transform: uppercase;
+
+    letter-spacing: 2px;
+
+    margin-bottom: 30px;
+}
+
+/*BOUTONS */
+.btn {
+
+    display: block;
+
+    width: 100%;
+
+    padding: 15px;
+
+    margin-top: 15px;
+
+    box-sizing: border-box;
+
+    background: var(--blood);
+
+    color: var(--gold);
+
+    border: 2px solid var(--gold);
+
+    border-radius: 5px;
+
+    text-decoration: none;
+
+    cursor: pointer;
+
+    font-size: 18px;
+
+    font-weight: bold;
+
+    font-family: 'Cinzel';
+
+    text-transform: uppercase;
+
+    transition: 0.3s;
+
+    box-shadow: 0 4px 0 #500000;
+}
+
+/* HOVER */
+.btn:hover {
+
+    background: #a00000;
+
+    transform: translateY(-2px);
+}

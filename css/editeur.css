@@ -1,0 +1,159 @@
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@700&display=swap');
+
+.editeur-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.2rem;
+    width: 100%;
+    max-width: 720px;
+}
+
+.editeur-container h1 {
+    font-family: 'Cinzel', serif;
+    color: var(--gold);
+    font-size: 2rem;
+    text-transform: uppercase;
+    letter-spacing: 4px;
+    text-shadow: 0 0 15px rgba(212,175,55,0.5);
+    border-bottom: 2px solid var(--gold);
+    padding-bottom: 0.8rem;
+    width: 100%;
+    text-align: center;
+    margin: 0;
+}
+
+/* Barre d'outils */
+.editeur-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 0.8rem;
+    width: 100%;
+    background: linear-gradient(180deg, #2a1a0d 0%, #1a0f06 100%);
+    border: 1px solid var(--gold);
+    border-radius: 8px;
+    padding: 0.8rem 1.2rem;
+    box-sizing: border-box;
+}
+
+.tool-btn {
+    font-family: 'Cinzel', serif;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--gold);
+    background: linear-gradient(180deg, #3d2b1f 0%, #2a1a0d 100%);
+    border: 1px solid var(--gold);
+    border-radius: 5px;
+    padding: 0.4rem 0.9rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 0 #1a0f06;
+}
+
+.tool-btn:hover {
+    background: linear-gradient(180deg, #5a3e2b 0%, #3d2b1f 100%);
+    box-shadow: 0 2px 0 #1a0f06, 0 0 10px var(--gold);
+}
+
+.tool-btn.actif {
+    background: linear-gradient(180deg, var(--blood) 0%, #500000 100%);
+    border-color: #fff;
+    color: #fff;
+    box-shadow: 0 2px 0 #2d0000, 0 0 12px var(--blood);
+}
+
+.tool-btn-action {
+    font-family: 'Cinzel', serif;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--gold);
+    background: linear-gradient(180deg, var(--blood) 0%, #500000 100%);
+    border: 1px solid var(--gold);
+    border-radius: 5px;
+    padding: 0.4rem 1rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 3px 0 #2d0000;
+}
+
+.tool-btn-action:hover {
+    background: linear-gradient(180deg, #a00000 0%, #700000 100%);
+    box-shadow: 0 3px 0 #2d0000, 0 0 15px var(--gold);
+    transform: translateY(-2px);
+}
+
+.editeur-toolbar label {
+    font-family: 'Cinzel', serif;
+    color: var(--parchment);
+    font-size: 0.8rem;
+    letter-spacing: 1px;
+}
+
+.editeur-toolbar input[type="text"],
+.editeur-toolbar select {
+    background: #16213e;
+    color: var(--parchment);
+    border: 1px solid var(--gold);
+    border-radius: 5px;
+    padding: 0.35rem 0.6rem;
+    font-family: 'Cinzel', serif;
+    font-size: 0.8rem;
+}
+
+/* Canvas éditeur */
+#editeur-canvas {
+    border: 3px solid var(--gold);
+    border-radius: 6px;
+    cursor: crosshair;
+    max-width: 100%;
+    box-shadow:
+        0 0 25px rgba(212,175,55,0.25),
+        0 0 50px rgba(0,0,0,0.7);
+}
+
+/* Légende */
+.editeur-legende {
+    display: flex;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    justify-content: center;
+    font-family: 'Cinzel', serif;
+    font-size: 0.78rem;
+    color: var(--parchment);
+    letter-spacing: 1px;
+}
+
+.legende-item {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.legende-couleur {
+    width: 16px;
+    height: 16px;
+    border-radius: 3px;
+    border: 1px solid var(--gold);
+    display: inline-block;
+}
+
+/* Message éditeur */
+#editeur-message {
+    font-family: 'Cinzel', serif;
+    font-size: 1rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #4ade80;
+    text-shadow: 0 0 10px #4ade80;
+    min-height: 1.5rem;
+    text-align: center;
+}
+
+#editeur-message.erreur {
+    color: var(--blood);
+    text-shadow: 0 0 10px var(--blood);
+}

@@ -1,0 +1,61 @@
+.profil-box {
+    width: 450px !important;
+    max-width: 90%;
+}
+
+.profil-avatar {
+    font-size: 80px;
+    margin: 10px 0 20px;
+    text-shadow: 2px 2px 5px rgba(0,0,0,0.4);
+}
+
+.profil-info {
+    list-style: none;
+    padding: 0;
+    margin: 20px 0;
+    text-align: left;
+    background: rgba(139, 69, 19, 0.1);
+    border: 1px solid #5d4037;
+    border-radius: 5px;
+}
+
+.profil-info li {
+    padding: 10px 15px;
+    border-bottom: 1px dashed #8b4513;
+    color: #3d2b1f;
+}
+
+.profil-info li:last-child { border-bottom: none; }
+
+.invite-msg {
+    color: #3d2b1f;
+    font-size: 16px;
+    line-height: 1.6;
+    padding: 15px;
+    background: rgba(212, 175, 55, 0.15);
+    border-left: 4px solid var(--gold);
+    border-radius: 4px;
+    text-align: left;
+}
+
+.btn-medieval {
+    display: inline-block;
+    margin: 5px;
+}
+
+.profil-avatar {
+    font-size: 80px;
+    margin: 10px 0 20px;
+    text-shadow: 2px 2px 5px rgba(0,0,0,0.4);
+    text-align: center; /* Centre l'avatar */
+}
+
+.profil-avatar img {
+    width: 200px;       
+    height: 200px;
+    object-fit: cover;  
+    display: block;
+    margin: 0 auto;     
+    border: 3px solid var(--gold);
+    box-shadow: 2px 2px 8px rgba(0,0,0,0.4);
+}

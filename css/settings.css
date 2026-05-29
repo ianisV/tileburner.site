@@ -1,0 +1,158 @@
+/* settings.css */
+:root {
+    --gold: #d4af37;
+    --blood: #800000;
+    --stone: #2c3e50;
+    --parchment: #f4e4bc;
+}
+
+body {
+    background: radial-gradient(circle, #800000 0%, #333028 100%);
+    font-family: 'MedievalSharp', cursive;
+    color: #3d2b1f;
+}
+
+
+.container {
+    background: var(--parchment);
+    padding: 40px;
+    border: 10px double #5d4037;
+    border-radius: 5px;
+    box-shadow: 0 0 50px rgba(0,0,0,0.8), inset 0 0 100px rgba(139,69,19,0.2);
+    width: 450px;
+    text-align: center;
+}
+
+h1 {
+    font-family: 'Cinzel', serif;
+    color: var(--blood);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 30px;
+}
+
+h2 {
+    font-family: 'Cinzel', serif;
+    color: #5d4037;
+    border-bottom: 2px solid #8b4513;
+    padding-bottom: 5px;
+    margin-top: 30px;
+    font-size: 16px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* SETTINGS ROWS */
+.setting {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 15px 0;
+    gap: 15px;
+}
+
+.setting label {
+    font-size: 14px;
+    color: #2c1e11;
+    text-align: left;
+    flex: 1;
+}
+
+/* SLIDERS */
+input[type="range"] {
+    flex: 1;
+    accent-color: var(--blood);
+    cursor: pointer;
+    height: 6px;
+    border-radius: 3px;
+}
+
+/* CHECKBOX */
+.checkbox-row input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    accent-color: var(--blood);
+    cursor: pointer;
+}
+
+/* SELECT */
+select {
+    flex: 1;
+    padding: 8px;
+    background: rgba(255,255,255,0.5);
+    border: 2px solid #8b4513;
+    border-radius: 3px;
+    font-family: 'MedievalSharp', cursive;
+    font-size: 14px;
+    color: #2c1e11;
+    cursor: pointer;
+}
+
+select:focus {
+    outline: none;
+    border-color: var(--gold);
+    box-shadow: 0 0 10px var(--gold);
+    background: #fff;
+}
+
+/* VALUE DISPLAY */
+.value-display {
+    color: var(--blood);
+    font-weight: bold;
+    min-width: 40px;
+    text-align: right;
+}
+
+/* BUTTONS */
+.buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 30px;
+    justify-content: center;
+}
+
+.buttons button {
+    padding: 12px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-family: 'Cinzel', serif;
+    font-size: 14px;
+    font-weight: bold;
+    text-transform: uppercase;
+    transition: 0.3s;
+    border: 2px solid var(--gold);
+}
+
+.btn-save {
+    background: var(--blood);
+    color: var(--gold);
+    box-shadow: 0 4px 0 #500000;
+}
+
+.btn-save:hover {
+    background: #a00000;
+    transform: translateY(-2px);
+}
+
+.btn-reset {
+    background: #5d4037;
+    color: var(--parchment);
+    box-shadow: 0 4px 0 #3e2723;
+}
+
+.btn-reset:hover {
+    background: #6d4c41;
+    transform: translateY(-2px);
+}
+
+.btn-back {
+    background: transparent;
+    color: #8b4513;
+    border-color: #8b4513;
+}
+
+.btn-back:hover {
+    color: var(--blood);
+    border-color: var(--blood);
+    transform: translateY(-2px);
+}
