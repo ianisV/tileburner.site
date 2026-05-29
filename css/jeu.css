@@ -347,44 +347,44 @@ html, body {
     justify-content: center;
 }
 .dpad-btn {
-    width: 64px;
-    height: 64px;
+    width: 80px;
+    height: 80px;
     font-family: 'Cinzel', serif;
-    font-size: 1.5rem;
+    font-size: 2rem;
     font-weight: bold;
     background: linear-gradient(180deg, #4a2c12 0%, #2a1808 100%);
-    border: 2px solid rgba(212,175,55,0.5);
-    border-radius: 12px;
+    border: 3px solid rgba(212,175,55,0.6);
+    border-radius: 14px;
     color: #d4af37;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
     transition: all 0.12s;
-    box-shadow: 0 4px 0 #1a0f06, 0 0 8px rgba(212,175,55,0.1);
+    box-shadow: 0 5px 0 #1a0f06, 0 0 12px rgba(212,175,55,0.15);
     -webkit-tap-highlight-color: transparent;
     touch-action: manipulation;
 }
 .dpad-btn:active {
-    transform: translateY(3px);
+    transform: translateY(4px);
     box-shadow: 0 1px 0 #1a0f06;
     background: linear-gradient(180deg, #6b3f1c 0%, #3d2410 100%);
     border-color: #d4af37;
 }
 .dpad-btn:hover {
     background: linear-gradient(180deg, #6b3f1c 0%, #3d2410 100%);
-    box-shadow: 0 4px 0 #1a0f06, 0 0 14px rgba(212,175,55,0.3);
+    box-shadow: 0 5px 0 #1a0f06, 0 0 18px rgba(212,175,55,0.35);
 }
 .dpad-center {
-    width: 64px;
-    height: 64px;
+    width: 80px;
+    height: 80px;
 }
 
 /* ============ D-PAD WASM ============ */
 .wasm-dpad {
     display: grid;
-    grid-template-columns: 64px 64px 64px;
-    grid-template-rows: 64px 64px 64px;
+    grid-template-columns: 80px 80px 80px;
+    grid-template-rows: 80px 80px 80px;
     gap: 6px;
     justify-content: center;
     margin: 12px auto;
@@ -393,33 +393,33 @@ html, body {
     touch-action: manipulation;
 }
 .wasm-dpad .wdp {
-    width: 64px;
-    height: 64px;
+    width: 80px;
+    height: 80px;
     font-family: 'Cinzel', serif;
-    font-size: 1.5rem;
+    font-size: 2rem;
     font-weight: bold;
     background: linear-gradient(180deg, #4a2c12 0%, #2a1808 100%);
-    border: 2px solid rgba(212,175,55,0.5);
-    border-radius: 12px;
+    border: 3px solid rgba(212,175,55,0.6);
+    border-radius: 14px;
     color: #d4af37;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
     transition: all 0.12s;
-    box-shadow: 0 4px 0 #1a0f06, 0 0 8px rgba(212,175,55,0.1);
+    box-shadow: 0 5px 0 #1a0f06, 0 0 12px rgba(212,175,55,0.15);
     -webkit-tap-highlight-color: transparent;
     touch-action: manipulation;
 }
 .wasm-dpad .wdp:active {
-    transform: translateY(3px);
+    transform: translateY(4px);
     box-shadow: 0 1px 0 #1a0f06;
     background: linear-gradient(180deg, #6b3f1c 0%, #3d2410 100%);
     border-color: #d4af37;
 }
 .wasm-dpad .wdp:hover {
     background: linear-gradient(180deg, #6b3f1c 0%, #3d2410 100%);
-    box-shadow: 0 4px 0 #1a0f06, 0 0 14px rgba(212,175,55,0.3);
+    box-shadow: 0 5px 0 #1a0f06, 0 0 18px rgba(212,175,55,0.35);
 }
 
 /* ============ MOBILE-ONLY ============ */
@@ -462,37 +462,45 @@ html, body {
         margin-bottom: 0.8rem;
     }
 
-    /* Bigger touch buttons on small screens */
+    /* Big touch buttons — almost as wide as the game canvas */
     .mobile-dpad {
-        gap: 8px;
-        margin: 12px auto 4px;
+        gap: 10px;
+        margin: 16px auto 4px;
     }
     .dpad-row {
-        gap: 8px;
+        gap: 10px;
     }
     .dpad-btn {
-        width: 72px;
-        height: 72px;
-        font-size: 1.8rem;
-        border-radius: 14px;
-        box-shadow: 0 5px 0 #1a0f06, 0 0 10px rgba(212,175,55,0.15);
+        width: 100px;
+        height: 100px;
+        font-size: 2.6rem;
+        border-radius: 16px;
+        border-width: 3px;
+        box-shadow: 0 6px 0 #1a0f06, 0 0 16px rgba(212,175,55,0.2);
+    }
+    .dpad-btn:active {
+        transform: translateY(5px);
     }
     .dpad-center {
-        width: 72px;
-        height: 72px;
+        width: 100px;
+        height: 100px;
     }
 
     .wasm-dpad {
-        grid-template-columns: 72px 72px 72px;
-        grid-template-rows: 72px 72px 72px;
-        gap: 8px;
+        grid-template-columns: 100px 100px 100px;
+        grid-template-rows: 100px 100px 100px;
+        gap: 10px;
     }
     .wasm-dpad .wdp {
-        width: 72px;
-        height: 72px;
-        font-size: 1.8rem;
-        border-radius: 14px;
-        box-shadow: 0 5px 0 #1a0f06, 0 0 10px rgba(212,175,55,0.15);
+        width: 100px;
+        height: 100px;
+        font-size: 2.6rem;
+        border-radius: 16px;
+        border-width: 3px;
+        box-shadow: 0 6px 0 #1a0f06, 0 0 16px rgba(212,175,55,0.2);
+    }
+    .wasm-dpad .wdp:active {
+        transform: translateY(5px);
     }
 
     .instructions {
@@ -510,21 +518,21 @@ html, body {
 
 @media (max-width: 400px) {
     .dpad-btn {
-        width: 64px;
-        height: 64px;
-        font-size: 1.5rem;
+        width: 85px;
+        height: 85px;
+        font-size: 2.2rem;
     }
     .dpad-center {
-        width: 64px;
-        height: 64px;
+        width: 85px;
+        height: 85px;
     }
     .wasm-dpad {
-        grid-template-columns: 64px 64px 64px;
-        grid-template-rows: 64px 64px 64px;
+        grid-template-columns: 85px 85px 85px;
+        grid-template-rows: 85px 85px 85px;
     }
     .wasm-dpad .wdp {
-        width: 64px;
-        height: 64px;
-        font-size: 1.5rem;
+        width: 85px;
+        height: 85px;
+        font-size: 2.2rem;
     }
 }
