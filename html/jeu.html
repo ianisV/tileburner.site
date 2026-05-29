@@ -7,6 +7,58 @@
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../css/jeu.css">
     <link rel="stylesheet" href="../css/common.css">
+    <style>
+    .mobile-dpad {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 4px;
+        margin: 16px auto 8px;
+        user-select: none;
+        -webkit-user-select: none;
+    }
+    .dpad-row {
+        display: flex;
+        gap: 4px;
+        align-items: center;
+        justify-content: center;
+    }
+    .dpad-btn {
+        width: 56px;
+        height: 56px;
+        font-family: 'Cinzel', serif;
+        font-size: 1.3rem;
+        font-weight: bold;
+        background: linear-gradient(180deg, #4a2c12 0%, #2a1808 100%);
+        border: 2px solid rgba(212,175,55,0.5);
+        border-radius: 10px;
+        color: #d4af37;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.15s;
+        box-shadow: 0 3px 0 #1a0f06, 0 0 8px rgba(212,175,55,0.1);
+        -webkit-tap-highlight-color: transparent;
+        touch-action: manipulation;
+    }
+    .dpad-btn:active {
+        transform: translateY(2px);
+        box-shadow: 0 1px 0 #1a0f06;
+        background: linear-gradient(180deg, #6b3f1c 0%, #3d2410 100%);
+    }
+    .dpad-btn:hover {
+        background: linear-gradient(180deg, #6b3f1c 0%, #3d2410 100%);
+        box-shadow: 0 3px 0 #1a0f06, 0 0 12px rgba(212,175,55,0.3);
+    }
+    .dpad-center {
+        width: 56px;
+        height: 56px;
+    }
+    @media (min-width: 769px) {
+        .mobile-dpad { display: none; }
+    }
+    </style>
     <script src="../js/audio.js" defer></script>
     <script src="../js/skin-secret.js" defer></script>
     <script src="../js/nav-active.js"></script>
@@ -392,6 +444,25 @@ if (estModeWasm) {
 
     <canvas id="game" width="600" height="600" aria-label="Grille de jeu"></canvas>
 
+    <!-- D-Pad mobile pour mode classique -->
+    <div class="mobile-dpad" id="classic-dpad">
+        <div class="dpad-row">
+            <div></div>
+            <button class="dpad-btn" data-dir="0" aria-label="Haut">↑</button>
+            <div></div>
+        </div>
+        <div class="dpad-row">
+            <button class="dpad-btn" data-dir="3" aria-label="Gauche">←</button>
+            <div class="dpad-center"></div>
+            <button class="dpad-btn" data-dir="1" aria-label="Droite">→</button>
+        </div>
+        <div class="dpad-row">
+            <div></div>
+            <button class="dpad-btn" data-dir="2" aria-label="Bas">↓</button>
+            <div></div>
+        </div>
+    </div>
+
     <div id="message" role="status" aria-live="polite"></div>
 
     <div class="instructions">
@@ -536,6 +607,21 @@ if (estModeWasm) {
                     case 'ArrowLeft': case 'q': case 'a': partie.deplacer(0,-1); e.preventDefault(); break;
                     case 'ArrowRight': case 'd':          partie.deplacer(0, 1); e.preventDefault(); break;
                 }
+            });
+            document.querySelectorAll('#classic-dpad .dpad-btn').forEach(function(btn) {
+                var dir = parseInt(btn.dataset.dir);
+                var move = function(e) {
+                    e.preventDefault();
+                    if (!partie) return;
+                    switch (dir) {
+                        case 0: partie.deplacer(-1, 0); break;
+                        case 1: partie.deplacer(0, 1);  break;
+                        case 2: partie.deplacer(1, 0);  break;
+                        case 3: partie.deplacer(0, -1); break;
+                    }
+                };
+                btn.addEventListener('click', move);
+                btn.addEventListener('touchstart', move, { passive: false });
             });
         });
     })();

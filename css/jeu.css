@@ -159,13 +159,17 @@ html, body {
 /* ============ CANVAS ============ */
 #game {
     display: block;
-    margin: 0 auto;
-    border: 2px solid rgba(212,175,55,0.5);
-    border-radius: 4px;
-    box-shadow:
-        0 0 30px rgba(0,0,0,0.8),
-        0 0 15px rgba(212,175,55,0.15);
+    margin: 1.5rem auto;
     max-width: 100%;
+    height: auto;
+    image-rendering: pixelated;
+    border: 1px solid rgba(212,175,55,0.2);
+    border-radius: 4px;
+    background: #1a1208;
+    box-shadow:
+        0 0 30px rgba(0,0,0,0.7),
+        inset 0 0 30px rgba(0,0,0,0.5);
+    touch-action: manipulation;
 }
 
 /* ============ MESSAGE ============ */
